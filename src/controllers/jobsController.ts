@@ -1,16 +1,39 @@
 import Job from "../models/Job";
-import { ApiResponse } from "../types/api";
+import { JobApiResponse, ApiResponse } from "../types/api";
 
-export async function getJobs(number?: string): Promise<ApiResponse> {
+export async function getJobs(page: number = 1, limit: number = 10, keyword?: string): Promise<JobApiResponse> {
   try {
-    let query = Job.find().sort({ createDate: -1 });
-    if (number) {
-      const num = parseInt(number);
-      if (isNaN(num)) return { status: "error", message: "Invalid number parameter" };
-      query = query.limit(num);
+    let query = Job.find();
+
+    // 處理關鍵字搜尋
+    if (keyword && keyword !== "null") {
+      query = query.where({
+        jobTitle: { $regex: keyword, $options: "i" },
+      });
     }
+
+    // 計算總數量
+    const totalJobs = await Job.countDocuments(query.getQuery());
+
+    // 分頁處理
+    const startIndex = (page - 1) * limit;
+    query = query.sort({ createDate: -1 }).skip(startIndex).limit(limit);
+
+    // 執行查詢
     const jobs = await query.exec();
-    return { status: "ok", data: jobs };
+
+    return {
+      status: "success",
+      data:{
+        jobs,
+        pagination: {
+          totalItems: totalJobs,
+          totalPages: Math.ceil(totalJobs / limit),
+          currentPage: page,
+          pageSize: limit,
+        },  
+      }
+    };
   } catch (error) {
     console.error("Error in getJobs:", error);
     return { status: "error", message: "Failed to fetch jobs" };
@@ -20,7 +43,7 @@ export async function getJobs(number?: string): Promise<ApiResponse> {
 export async function getJob(id: string): Promise<ApiResponse> {
   if (!id) return { status: "error", message: "Job ID is required" };
   const job = await Job.findById(id);
-  if (job) return { status: "ok", data: job };
+  if (job) return { status: "success", data: job };
   return { status: "error", message: "Job not found" };
 }
 
@@ -37,7 +60,7 @@ export async function addJob(data: {
   seniority: string;
 }): Promise<ApiResponse> {
   await Job.create({ ...data, createDate: new Date(data.createDate) });
-  return { status: "ok", data: { res: "ok" } };
+  return { status: "success", data: { res: "ok" } };
 }
 
 export async function updateJob(data: {
@@ -57,13 +80,13 @@ export async function updateJob(data: {
     { _id: data._id },
     { $set: { ...data, createDate: new Date(data.createDate) } }
   );
-  if (result.modifiedCount > 0) return { status: "ok", data: { res: "ok" } };
+  if (result.modifiedCount > 0) return { status: "success", data: { res: "ok" } };
   return { status: "error", message: "Job not found" };
 }
 
 export async function deleteJob(id: string): Promise<ApiResponse> {
   if (!id) return { status: "error", message: "Job ID is required" };
   const result = await Job.deleteOne({ _id: id });
-  if (result.deletedCount > 0) return { status: "ok", data: { res: "ok" } };
+  if (result.deletedCount > 0) return { status: "success", data: { res: "ok" } };
   return { status: "error", message: "Job not found" };
 }

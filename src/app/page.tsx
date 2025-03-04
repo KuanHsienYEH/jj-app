@@ -5,12 +5,12 @@ import connectDB from "../lib/db";
 async function fetchJobs(): Promise<ApiResponse> {
   await connectDB();
   const jobs = await Job.find().sort({ createDate: -1 }).exec();
-  return { status: "ok", data: jobs };
+  return { status: "success", data: jobs };
 }
 
 export default async function HomePage() {
   const response = await fetchJobs();
-  const jobs = response.status === "ok" ? response.data : [];
+  const jobs = response.status === "success" ? response.data : [];
 
   return (
     <div>
