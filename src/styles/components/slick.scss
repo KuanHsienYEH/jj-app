@@ -1,0 +1,19 @@
+@import '../abstracts/_mixins.scss';
+@import '../abstracts/_variables.scss';
+
+.slick-card{
+    width: 90%;
+    @include respond(phone) {
+        width: 100%;
+    }
+}
+.slick-slide > div {
+    display: grid;
+    place-items: center;
+    margin: auto;
+   
+  }
+
+.slick-prev:before, .slick-next:before{
+    color: $color-header;
+}

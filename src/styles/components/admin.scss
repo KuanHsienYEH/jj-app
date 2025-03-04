@@ -1,0 +1,58 @@
+.menu {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  margin-top: 100px;
+  gap: 30px;
+}
+
+.menuItem {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  box-sizing: border-box;
+  box-shadow: rgba(0, 0, 0, 0.2) 0px 2px 1px -1px, 
+              rgba(0, 0, 0, 0.14) 0px 1px 1px 0px, 
+              rgba(0, 0, 0, 0.12) 0px 1px 3px 0px;
+  border-radius: 4px;
+  transition: transform 0.2s ease-out;
+  position: relative; // ✅ 防止影響其他元素
+  z-index: 1; // ✅ 讓 hover 的物件保持在最上層
+  will-change: transform; // ✅ 讓瀏覽器提前優化
+  transform-origin: center; // ✅ 讓擴展更自然
+  
+  svg {
+      margin: 0 auto;
+  }
+}
+
+.menuItem:hover {
+  background-color: #eee;
+  transform: scale(1.05); // ✅ 變小一點，減少跳動
+  z-index: 10; // ✅ 保持在最上層，避免影響佈局
+}
+
+.menuItemText {
+  font-weight: bold;
+}
+
+.logoContainer {
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+  padding: 10px;
+}
+
+.logo {
+  max-width: 100%;
+  height: auto;
+}
+
+.leftMenuItem {
+  &:hover {
+      background-color: #eee;
+  }
+}
+
+.leftMenuItemText {
+  font-weight: bold;
+}

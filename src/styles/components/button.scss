@@ -1,0 +1,92 @@
+@import '../abstracts/_mixins.scss';
+@import '../abstracts/_variables.scss';
+
+.button {
+    width: 20rem;
+    height: 4rem;
+    padding: 1.4rem 1.25rem;
+    background-color: $color-blue;
+    color: $color-white;
+    display: flex;
+    justify-content: center;
+    border: 0;
+    cursor: pointer;
+
+    &:hover {
+        background-color: $color-blue-base;
+    }
+
+    @include respond(phone) {
+        width: 100%;
+    }
+}
+
+.button:disabled {
+    background-color: $color-gray-dark-2;
+    cursor: default;
+}
+
+.button--ghost {
+    background-color: transparent;
+    border: 1px solid $color-blue;
+    color: $color-blue;
+    display: flex;
+    font-size: 1.4rem;
+    line-height: 3rem;
+    padding: 0;
+    align-items: center;
+
+    &:hover {
+        background-color: transparent;
+        border: 1px solid $color-blue-base
+    }
+
+    &:not(:last-child) {
+        margin-right: 1rem;
+    }
+}
+
+.button--ghost-icon {
+    display: inline-block;
+    line-height: 1.6rem;
+    margin-right: 1rem;
+    transform: scale(1.2);
+}
+
+.text-btn {
+    font: 14px;
+    line-height: 21px;
+    color: $color-blue-base;
+    cursor: pointer;
+    text-decoration: underline;
+
+    &:hover {
+        text-decoration: underline;
+    }
+
+    &--no-underline,
+    &--no-underline:hover {
+        text-decoration: none;
+    }
+}
+
+.fa-google {
+    background: conic-gradient(from -45deg, #ea4335 110deg, #4285f4 90deg 180deg, #34a853 180deg 270deg, #fbbc05 270deg) 73% 55%/150% 150% no-repeat;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+.fa-facebook {
+    background: #4267B2;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}
+
+.fa-linkedin {
+    background: #2867B2;
+    background-clip: text;
+    color: transparent;
+    -webkit-text-fill-color: transparent;
+}

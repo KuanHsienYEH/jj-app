@@ -1,0 +1,30 @@
+@mixin absCenter {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}
+@mixin flexCenter {
+   display: flex;
+   justify-content: center;
+}
+
+@mixin respond($breakpoint) {
+    @if $breakpoint == phone {
+        @media only screen and (max-width: 37.5em) {
+            @content;
+        } //600px
+    }
+    @if $breakpoint == pad {
+        @media only screen and (max-width: 48em) {
+            @content;
+        } //768px
+    }
+
+    @if $breakpoint == big-desktop {
+        @media only screen and (min-width: 112.5em) {
+            @content;
+        } //1800
+    }
+}
+

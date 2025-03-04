@@ -1,0 +1,173 @@
+.search{
+    // background-image: url('./../../img/job_bg.jpeg');
+    // background-position: center;
+    // background-repeat: no-repeat;
+    margin-top: 105px;
+    // width: 100%;
+    &-img{
+        width: 100%;
+    }
+    &-form{
+       box-shadow: none;
+       //width: 768px;
+       
+       margin: 0 auto;
+    }
+    &-box{
+        width: inherit;
+        display: flex;
+        justify-content: center;
+    }
+    &-input{
+        width: 100%;
+        max-width: 300px;
+        background-color: none;
+        box-shadow: none;
+       
+    }
+}
+#job-container{
+    @include respond(phone) {
+        margin-left: 0;
+    }
+    .job-board__left{
+        width: 480px;
+        max-width: 480px;
+        height: 850px;
+        overflow-y: auto;
+        @include respond(phone) {
+            width: 100%;// 這邊要改
+            padding-left: 0;
+        }
+        .card-skeleton{
+            width: 480px;
+            margin-bottom: 20px;
+            margin-right: 20px;
+            height: 240px;
+        }
+        .search-result{
+            margin-bottom: 20px;
+            margin-right: 20px;
+            display: flex;
+            justify-content: space-between;
+            flex-direction: row;
+        }
+        .left__wrapper{
+            overflow: scroll;
+            .focus-card{
+                border: 2px solid $color-blue;
+            }
+            .card{
+                margin-bottom: 20px;
+                margin-right: 20px;
+                transition: all 250ms ease 0s;
+                border-radius: 8px;
+                box-shadow: rgba(33, 33, 33, 0.1) 0px 4px 9px;
+                button{
+                    width: 100%;
+                }
+                .button-wrapper{
+                    padding: 10px 20px 20px;
+                }
+            }
+        }
+        .pagination{
+            justify-content: center;
+            display: flex;
+        }
+    }
+    .chip-box{
+        div{
+           margin: 0 8px 8px 0;
+        }
+    }
+    .job-board__right{
+        position: relative;
+        @include respond(phone) {
+            // position: absolute;
+            // top: 32px;
+            // left: -15px;
+            display: none;
+        }
+       
+    }
+}
+
+#job-detail{
+    border-radius: 8px;
+    overflow-y: auto;
+    height: 830px;
+    min-width: fit-content;
+    @include respond(phone) {
+      min-width: auto;
+      
+    }
+    .job-detail{
+        &__header{
+            position: sticky;
+            top: 0;
+            background-color: #fff;
+            padding-right: 20px;
+       }
+       &__header{
+            padding: 2rem 2rem 0;
+            .button-wrapper{
+                width: 300px;
+                button{
+                    width: 100%;
+                    @include respond(phone) {
+                        width: 180px;
+                        
+                      }
+                }
+            }
+        }
+       &__body{
+            padding: 2rem;
+            pre {
+                white-space: pre-wrap; /* 保留空格，自动换行 */
+                word-wrap: break-word; /* 当单词过长时，自动换行 */
+            }
+        }
+    }
+    .chip-box{
+        div{
+           margin: 0 8px 8px 0;
+        }
+    }
+    .mb{
+        margin-bottom: 10px;
+    }
+}
+
+.job-modal{
+    // display: flex;
+    // flex-direction: column;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background-color: #fff;
+    border: 1px solid #777;
+    padding: 2rem;
+    transition: box-shadow 83ms;
+    border-radius: 8px;
+    @include respond(phone) {
+        overflow-y: scroll;
+        width: 80%;
+        height: 80vh;
+      }
+
+
+    & form {
+        display: flex;
+        flex-direction: column;
+        & >*{
+            margin-bottom: 16px;
+        }
+    }
+
+    & .job-modal__radio{
+        flex-direction: row;
+    }
+}
