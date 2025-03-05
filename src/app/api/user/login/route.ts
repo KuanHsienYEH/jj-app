@@ -1,23 +1,30 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import { withDB, withMethod } from "../../../../lib/middleware";
-import User from "../../../../models/User";
-import jwt from "jsonwebtoken";
-import { ApiResponse } from "../../../../types/api";
+import { NextRequest, NextResponse } from "next/server";
+import bcrypt from "bcryptjs";
+import { generateAuthToken } from "@/lib/authService";
+import User from "@/models/User";
+import { withDB } from "@/lib/middleware";
 
-const handler = async (req: NextApiRequest, res: NextApiResponse<ApiResponse>) => {
-  const { email, pwd } = req.body as { email: string; pwd: string };
-  const user = await User.findOne({ email, pwd });
+export const POST = withDB(async (req: NextRequest) => {
+  try {
+    const { username, pwd } = await req.json();
 
-  if (user) {
-    const accessToken = jwt.sign(
-      { _id: user._id.toString() },
-      process.env.ACCESS_TOKEN as string,
-      { expiresIn: "1 day" }
-    );
-    res.json({ status: "ok", data: { accessToken } });
-  } else {
-    res.json({ status: "error", message: "Invalid credentials", data: { user: false } });
+    // ✅ Check if user exists
+    const user = await User.findOne({ username });
+    if (!user) {
+      return NextResponse.json({ status: "error", message: "Invalid username or password." }, { status: 400 });
+    }
+
+    // ✅ Compare hashed password
+    const isPasswordValid = await bcrypt.compare(pwd, user.password);
+    if (!isPasswordValid) {
+      return NextResponse.json({ status: "error", message: "Invalid username or password." }, { status: 400 });
+    }
+
+    // ✅ Generate JWT token
+    const token = generateAuthToken({ userId: user._id, username: user.username });
+
+    return NextResponse.json({ status: "success", message: "Login successful.", data: { token } }, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ status: "error", message: "Login failed. Please try again." }, { status: 500 });
   }
-};
-
-export default withDB(withMethod(["POST"], handler));
+});

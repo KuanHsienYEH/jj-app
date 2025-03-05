@@ -82,12 +82,12 @@ export default function JobPopup({ jobs, updateJobsList, job, emitPopup, open }:
         }
       } else {
         // ✅ 新增職缺
-        const res = await fetch("/api/admin/jobs", {
+        const res = await fetch("/api/jobs/add-job", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(data),
         });
-
+        debugger
         if (res.ok) {
           const newJob = await res.json();
           emitPopup(false);

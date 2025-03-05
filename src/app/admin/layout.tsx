@@ -1,6 +1,6 @@
 'use client'
 
-import * as React from 'react';
+import { useEffect, useState } from "react";;
 import { styled, useTheme } from '@mui/material/styles';
 import Box from '@mui/material/Box';
 import Drawer from '@mui/material/Drawer';
@@ -88,16 +88,25 @@ const DrawerHeader = styled('div')(({ theme }) => ({
 
 export default function PersistentDrawerLeft({ children }: { children: React.ReactNode }) {
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
-  const [currentTab, setCurrentTab] = React.useState<string | null>(null);
+  const [open, setOpen] = useState(true);
+  const [currentTab, setCurrentTab] = useState<string | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
 
   const router = useRouter();
   const pathname = usePathname();
 
-  React.useEffect(() => {
+  // useEffect(() => {
+  //   const token = localStorage.getItem("token");
+  //   if (!token) 
+  //     router.push("/login"); // ✅ Redirect to login
+  // }, []);
+
+
+  useEffect(() => {
     setCurrentTab(pathname.split('/')[2] || 'menu');
   }, [pathname]);
+  
 
   const handleDrawerOpen = () => {
     setOpen(true);

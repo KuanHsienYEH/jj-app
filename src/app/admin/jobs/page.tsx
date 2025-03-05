@@ -147,8 +147,8 @@ export default function JobPage() {
             // ✅ 載入中 (Skeleton)
             Array.from(new Array(currPage.limit)).map((_, index) => (
               <TableRow key={index}>
-                <TableCell colSpan={4}>
-                  <Skeleton variant="rectangular" height={50} />
+                <TableCell colSpan={8}>
+                  <Skeleton variant="rectangular" width="100%"  height={50} />
                 </TableCell>
               </TableRow>
             ))
