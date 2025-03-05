@@ -18,6 +18,9 @@ import Typography from "@mui/material/Typography";
 import TextField from "@mui/material/TextField";
 import Box from "@mui/material/Box";
 import { debounce } from "lodash";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faXmark,faCircle,faGear } from '@fortawesome/free-solid-svg-icons';
+
 
 
 export default function JobPage() {
@@ -110,7 +113,10 @@ export default function JobPage() {
             boxShadow: 2,
             "&:hover": { bgcolor: "primary.dark" }
           }}
-          onClick={() => setPopupVisible(true)}
+          onClick={() => {
+            setSelectedJob(null);
+            setPopupVisible(true);
+          }}
         >
           新增職缺
         </Button>
@@ -126,11 +132,15 @@ export default function JobPage() {
       <Table>
         <TableHead>
           <TableRow>
-            <TableCell>職務名稱</TableCell>
-            <TableCell>工作地點</TableCell>
-            <TableCell>薪資待遇</TableCell>
-            <TableCell>編輯</TableCell>
-          </TableRow>
+           <TableCell><pre>顯示</pre></TableCell>
+           <TableCell><pre>職務名稱</pre></TableCell>
+           <TableCell><pre>工作地點</pre></TableCell>
+           <TableCell><pre>工作性質</pre></TableCell>
+           <TableCell><pre>薪資待遇</pre></TableCell>
+           <TableCell><pre>學歷科系</pre></TableCell>
+           <TableCell><pre>工作年資</pre></TableCell>
+           <TableCell><pre>編輯</pre></TableCell>
+         </TableRow>
         </TableHead>
         <TableBody>
           {loading ? (
@@ -146,9 +156,18 @@ export default function JobPage() {
             // ✅ 顯示職缺資料
             jobs.map((job) => (
               <TableRow key={job._id}>
+                <TableCell>
+                {job.isActive ? 
+                <FontAwesomeIcon size="2x" color='red' icon={faXmark} />:
+                <FontAwesomeIcon size="2x" color='lightgreen' icon={faCircle} />}
+                </TableCell>
                 <TableCell>{job.jobTitle}</TableCell>
                 <TableCell>{job.location}</TableCell>
+                <TableCell>{job.jobType}</TableCell>
                 <TableCell>{job.salary}</TableCell>
+                <TableCell>{job.education}</TableCell>
+                <TableCell>{job.seniority}</TableCell>
+                
                 <TableCell>
                   <Button variant="outlined" onClick={() => {
                     setSelectedJob(job);

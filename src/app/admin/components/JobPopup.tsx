@@ -33,25 +33,40 @@ interface JobPopupProps {
 }
 
 export default function JobPopup({ jobs, updateJobsList, job, emitPopup, open }: JobPopupProps) {
-  const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<Job>();
-
-  useEffect(() => {
-    if (job) {
-      Object.keys(job).forEach((key) => {
-        setValue(key as keyof Job, job[key as keyof Job]);
+    const { register, handleSubmit, reset, setValue, formState: { errors } } = useForm<Job>({
+        defaultValues: {
+          jobTitle: "",
+          location: "",
+          jobType: "",
+          salary: "",
+          education: "",
+          seniority: "",
+          jobDetail: "",
+          requirement: "",
+        }
       });
-    }
-  }, [job, setValue]);
+
+      useEffect(() => {
+        if (open) {
+          if (job) {
+            Object.keys(job).forEach((key) => {
+              setValue(key as keyof Job, job[key as keyof Job]);
+            });
+          } else {
+            reset();
+          }
+        }
+      }, [job, open, setValue, reset]);
 
   const setModalClose = () => {
-    reset();
+    reset(); // ✅ 關閉視窗時清空表單
     emitPopup(false);
   };
 
   const onFormSubmit = async (data: Job) => {
     try {
       if (job) {
-        // 更新職缺
+        // ✅ 更新職缺
         const res = await fetch(`/api/admin/jobs/${job._id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -66,7 +81,7 @@ export default function JobPopup({ jobs, updateJobsList, job, emitPopup, open }:
           alert("更新成功");
         }
       } else {
-        // 新增職缺
+        // ✅ 新增職缺
         const res = await fetch("/api/admin/jobs", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -95,14 +110,14 @@ export default function JobPopup({ jobs, updateJobsList, job, emitPopup, open }:
           <FontAwesomeIcon onClick={setModalClose} cursor="pointer" icon={faXmark} size="lg" />
         </div>
         <Box component="form" sx={{ overflowY: "auto", maxHeight: "70vh" }} onSubmit={handleSubmit(onFormSubmit)}>
-          <TextField {...register("jobTitle", { required: "必填" })} error={!!errors.jobTitle} label="職務名稱" fullWidth />
-          <TextField {...register("location", { required: "必填" })} error={!!errors.location} label="工作地點" fullWidth />
-          <TextField {...register("jobType", { required: "必填" })} error={!!errors.jobType} label="工作性質" fullWidth />
-          <TextField {...register("salary", { required: "必填" })} error={!!errors.salary} label="薪資待遇" fullWidth />
-          <TextField {...register("education", { required: "必填" })} error={!!errors.education} label="學歷科系" fullWidth />
-          <TextField {...register("seniority", { required: "必填" })} error={!!errors.seniority} label="工作年資" fullWidth />
-          <TextField {...register("jobDetail", { required: "必填" })} error={!!errors.jobDetail} label="工作內容" fullWidth multiline rows={4} />
-          <TextField {...register("requirement", { required: "必填" })} error={!!errors.requirement} label="其他條件" fullWidth multiline rows={4} />
+          <TextField {...register("jobTitle", { required: "必填" })} error={!!errors.jobTitle} label="職務名稱" fullWidth sx={{ mb: 2 }} />
+          <TextField {...register("location", { required: "必填" })} error={!!errors.location} label="工作地點" fullWidth sx={{ mb: 2 }} />
+          <TextField {...register("jobType", { required: "必填" })} error={!!errors.jobType} label="工作性質" fullWidth sx={{ mb: 2 }} />
+          <TextField {...register("salary", { required: "必填" })} error={!!errors.salary} label="薪資待遇" fullWidth sx={{ mb: 2 }} />
+          <TextField {...register("education", { required: "必填" })} error={!!errors.education} label="學歷科系" fullWidth sx={{ mb: 2 }} />
+          <TextField {...register("seniority", { required: "必填" })} error={!!errors.seniority} label="工作年資" fullWidth sx={{ mb: 2 }} />
+          <TextField {...register("jobDetail", { required: "必填" })} error={!!errors.jobDetail} label="工作內容" fullWidth multiline rows={4} sx={{ mb: 2 }} />
+          <TextField {...register("requirement", { required: "必填" })} error={!!errors.requirement} label="其他條件" fullWidth multiline rows={4} sx={{ mb: 2 }} />
           <Stack direction="row" spacing={2} mt={2}>
             <Button type="submit" variant="contained">儲存</Button>
           </Stack>
