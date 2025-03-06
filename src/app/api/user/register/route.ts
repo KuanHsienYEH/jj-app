@@ -5,32 +5,40 @@ import { withDB } from "@/lib/middleware";
 
 export const POST = withDB(async (req: NextRequest) => {
   try {
-    const { username, pwd, confirmPassword } = await req.json();
+    const { username, pwd } = await req.json();
+
+    console.log("Incoming Request Data:", { username, pwd });
 
     // ✅ Validate fields
-    if (!username || !pwd || !confirmPassword) {
+    if (!username || !pwd) {
+      console.error("❌ Missing required fields");
       return NextResponse.json({ status: "error", message: "All fields are required." }, { status: 400 });
-    }
-
-    // ✅ Check if passwords match
-    if (pwd !== confirmPassword) {
-      return NextResponse.json({ status: "error", message: "Passwords do not match." }, { status: 400 });
     }
 
     // ✅ Check if username already exists
     const existingUser = await User.findOne({ username });
     if (existingUser) {
+      console.error("❌ Username already exists:", username);
       return NextResponse.json({ status: "error", message: "Username already exists." }, { status: 400 });
     }
 
     // ✅ Hash password
     const hashedPassword = await bcrypt.hash(pwd, 10);
+    console.log("✅ Password hashed successfully");
 
-    // ✅ Create user and return full user object
+    // ✅ Store `password` instead of `pwd`
     const newUser = await User.create({ username, password: hashedPassword });
+    console.log("✅ User created successfully:", newUser);
 
-    return NextResponse.json({ status: "success", message: "User registered successfully.", user: { _id: newUser._id, username: newUser.username } }, { status: 201 });
+    return NextResponse.json(
+      { status: "success", message: "User registered successfully.", user: { _id: newUser._id, username: newUser.username } },
+      { status: 201 }
+    );
   } catch (error) {
-    return NextResponse.json({ status: "error", message: "Registration failed." }, { status: 500 });
+    console.error("❌ Registration Failed:", error);
+    return NextResponse.json(
+      { status: "error", message: "Registration failed." },
+      { status: 500 }
+    );
   }
 });

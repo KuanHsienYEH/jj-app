@@ -1,16 +1,13 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemText from "@mui/material/ListItemText";
-import Divider from "@mui/material/Divider";
+import IconButton from "@mui/material/IconButton";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 interface User {
   _id: string;
@@ -18,12 +15,12 @@ interface User {
 }
 
 export default function Register() {
-  const router = useRouter();
-  const [form, setForm] = useState({ username: "", pwd: "", confirmPassword: "" });
+  const [form, setForm] = useState({ username: "", pwd: "" });
   const [error, setError] = useState("");
   const [users, setUsers] = useState<User[]>([]);
+  const [showUsers, setShowUsers] = useState(false); // 🔥 控制列表顯示/隱藏
 
-  // ✅ Fetch users list on load
+  // ✅ 取得使用者列表
   useEffect(() => {
     async function fetchUsers() {
       const res = await fetch("/api/user/list");
@@ -33,6 +30,7 @@ export default function Register() {
     fetchUsers();
   }, []);
 
+  // ✅ 註冊新使用者
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
@@ -49,9 +47,24 @@ export default function Register() {
       return;
     }
 
-    // ✅ Only store username and _id
+    // ✅ 新增使用者至列表
     setUsers((prevUsers) => [...prevUsers, { _id: data.user._id, username: data.user.username }]);
-    setForm({ username: "", pwd: "", confirmPassword: "" });
+    setForm({ username: "", pwd: "" });
+  }
+
+  // ✅ 刪除使用者
+  async function handleDelete(userId: string) {
+    const res = await fetch(`/api/user/delete?id=${userId}`, {
+      method: "DELETE",
+    });
+
+    const data = await res.json();
+    if (data.status === "success") {
+      // ✅ 從 UI 移除該使用者
+      setUsers(users.filter((user) => user._id !== userId));
+    } else {
+      alert("Failed to delete user.");
+    }
   }
 
   return (
@@ -77,14 +90,6 @@ export default function Register() {
             value={form.pwd}
             onChange={(e) => setForm({ ...form, pwd: e.target.value })}
           />
-          <TextField
-            label="Confirm Password"
-            type="password"
-            fullWidth
-            margin="normal"
-            value={form.confirmPassword}
-            onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })}
-          />
           {error && <Typography color="error" textAlign="center">{error}</Typography>}
           <Button type="submit" variant="contained" fullWidth sx={{ mt: 3 }}>
             Register Admin
@@ -92,26 +97,46 @@ export default function Register() {
         </form>
       </Paper>
 
-      {/* ✅ User List */}
-      <Typography variant="h6" fontWeight="bold" mb={2}>
-        Admin List
-      </Typography>
-      <Paper sx={{ p: 2 }}>
-        <List>
+      {/* 🔥 切換顯示 Admin List 的按鈕 */}
+      <Button
+        variant="outlined"
+        fullWidth
+        sx={{ mb: 2 }}
+        onClick={() => setShowUsers(!showUsers)}
+      >
+        {showUsers ? "隱藏 Admin List" : "顯示 Admin List"}
+      </Button>
+
+      {/* ✅ Admin List，只有當 `showUsers` 為 true 才顯示 */}
+      {showUsers && (
+        <Paper sx={{ p: 2 }}>
+          <Typography variant="h6" fontWeight="bold" mb={2}>
+            Admin List
+          </Typography>
           {users.length > 0 ? (
             users.map((user) => (
-              <div key={user._id}>
-                <ListItem>
-                  <ListItemText primary={`Username: ${user.username}`} />
-                </ListItem>
-                <Divider />
-              </div>
+              <Box
+                key={user._id}
+                sx={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  p: 1,
+                  borderBottom: "1px solid #ccc",
+                }}
+              >
+                <Typography> {user.username}</Typography>
+                {/* 刪除按鈕 */}
+                <IconButton onClick={() => handleDelete(user._id)} color="error">
+                  <DeleteIcon />
+                </IconButton>
+              </Box>
             ))
           ) : (
             <Typography textAlign="center">No admins registered.</Typography>
           )}
-        </List>
-      </Paper>
+        </Paper>
+      )}
     </Box>
   );
 }
