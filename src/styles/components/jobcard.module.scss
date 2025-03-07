@@ -1,0 +1,45 @@
+.jobCard {
+  transition: all 0.3s ease-in-out;
+  border: 1px solid #ddd;
+  background-color: #fff;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.05);
+  &:hover {
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+  }
+}
+
+.titleLink {
+  text-decoration: none;
+}
+
+.jobTitle {
+  color: #333; // ✅ 改成較柔和的顏色
+  font-weight: bold;
+  &:hover {
+    color: #0056b3; // ✅ 改成較深的藍色，符合 UI 風格
+  }
+}
+
+.jobInfo {
+  display: flex;
+  align-items: center;
+  color: #666;
+  margin-top: 8px;
+
+  svg {
+    margin-right: 8px;
+  }
+}
+
+.text {
+  font-size: 14px;
+}
+
+.applyButton {
+  color: #0056b3;
+  border-color: #0056b3;
+  &:hover {
+    background-color: #0056b3;
+    color: white;
+  }
+}

@@ -5,6 +5,8 @@ import Link from "next/link";
 import { Card, CardActions, CardContent, CardActionArea, Button, Typography, Box } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faDollarSign } from "@fortawesome/free-solid-svg-icons";
+import styles from "@/styles/components/jobcard.module.scss"; // ✅ 使用 SCSS Modules
+
 
 type Job = {
   _id: string;
