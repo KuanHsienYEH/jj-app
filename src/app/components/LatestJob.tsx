@@ -16,6 +16,27 @@ type Job = {
   description: string;
 };
 
+const style = {
+  titleBox: {
+      position:'relative', 
+      display: 'flex', 
+      justifyContent: 'center',
+      '@media (max-width:425px)': {
+          justifyContent: 'start'
+        },
+  },
+  moreJob: {
+      position:'absolute', 
+      right:'20px', 
+      bottom:'20px',
+      '@media (max-width:425px)': {
+          right:'0', 
+          bottom:'20px',
+        },
+  },
+}
+
+
 export default function LatestJob() {
   const [jobs, setJobs] = useState<Job[]>([]);
 
