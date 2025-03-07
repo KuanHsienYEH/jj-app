@@ -1,32 +1,51 @@
-import { ApiResponse } from "../types/api";
-import Job from "../models/Job";
-import connectDB from "../lib/db";
+"use client";
 
-async function fetchJobs(): Promise<ApiResponse> {
-  await connectDB();
-  const jobs = await Job.find().sort({ createDate: -1 }).exec();
-  return { status: "success", data: jobs };
-}
+import { useRouter } from "next/navigation";
+import { Container, Box, Button, Stack } from "@mui/material";
+import Shared from "./components/Shared"; // ✅ Import the UI Layout
+import LatestJob from "./components/LatestJob";
+import Service from "./components/Service";
 
-export default async function HomePage() {
-  const response = await fetchJobs();
-  const jobs = response.status === "success" ? response.data : [];
+// ✅ Import global SCSS
+import "@/styles/main.scss"; // Ensure this file exists
+
+export default function Homepage() {
+  const router = useRouter();
+
+  const handleJobSeekers = () => {
+    router.push("/jobs");
+  };
 
   return (
-    <div>
-      <h1>Welcome to JJapp!</h1>
-      <h2>Job Listings</h2>
-      {jobs.length > 0 ? (
-        <ul>
-          {jobs.map((job: any) => (
-            <li key={job._id}>
-              {job.jobTitle} - {job.location} - {job.salary}
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <p>No jobs available.</p>
-      )}
-    </div>
+    <Shared> {/* ✅ Wrap the page inside <Layout> to include Navbar & Footer */}
+      <Container>
+        {/* Hero Section */}
+        <div className="layoutRoot">
+          <Container className="layoutContent" maxWidth="md">
+            <div className="layoutCta">
+              <h1>關鍵人才 盡在巨將</h1>
+              <p>企業掌握關鍵人才的最佳合作夥伴</p>
+              <Stack spacing={2} direction="row">
+                <Button variant="contained">企業求才</Button>
+                <Button onClick={handleJobSeekers} variant="outlined">我要求職</Button>
+              </Stack>
+            </div>
+          </Container>
+        </div>
+
+        {/* Latest Job Section */}
+        <LatestJob />
+
+        {/* Services Section */}
+        <Service />
+
+        {/* Awards & Services Section */}
+        <Container className="awardServiceContainer">
+          <Box className="awardServiceBox">
+            {/* <Reward /> */}
+          </Box>
+        </Container>
+      </Container>
+    </Shared>
   );
 }

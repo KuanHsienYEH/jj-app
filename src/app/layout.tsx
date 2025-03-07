@@ -1,17 +1,11 @@
-import type { Metadata } from "next";
-
-export const metadata: Metadata = {
-  title: "JJapp",
-  description: "A Next.js Job Platform",
+export const metadata = {
+  title: "My Next.js App",
+  description: "A modern Next.js app with TypeScript",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="zh-tw">
       <body>{children}</body>
     </html>
   );
