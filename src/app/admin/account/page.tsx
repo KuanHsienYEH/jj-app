@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
@@ -8,6 +8,7 @@ import Typography from "@mui/material/Typography";
 import Paper from "@mui/material/Paper";
 import IconButton from "@mui/material/IconButton";
 import DeleteIcon from "@mui/icons-material/Delete";
+
 
 interface User {
   _id: string;
@@ -20,8 +21,13 @@ export default function Register() {
   const [users, setUsers] = useState<User[]>([]);
   const [showUsers, setShowUsers] = useState(false); // 🔥 控制列表顯示/隱藏
 
-  // ✅ 取得使用者列表
+  const fetchCalled = useRef(false); // 🔥 防止 `useEffect` 重複執行
+
+  
   useEffect(() => {
+    if (fetchCalled.current) return; // 🚀 防止第二次執行
+    fetchCalled.current = true;
+  
     async function fetchUsers() {
       const res = await fetch("/api/user/list");
       const data = await res.json();
@@ -69,12 +75,13 @@ export default function Register() {
 
   return (
     <Box sx={{ maxWidth: 500, margin: "auto", mt: 4 }}>
-      <Typography variant="h5" fontWeight="bold" textAlign="center" mb={2}>
-        Add Admin
-      </Typography>
 
       <Paper sx={{ p: 3, mb: 4 }}>
         <form onSubmit={handleSubmit}>
+          <Typography variant="h5" fontWeight="bold" textAlign="center" mb={2}>
+            Add Admin
+          </Typography>
+
           <TextField
             label="Username"
             fullWidth
@@ -95,13 +102,12 @@ export default function Register() {
             Register Admin
           </Button>
         </form>
-      </Paper>
 
-      {/* 🔥 切換顯示 Admin List 的按鈕 */}
+{/* 🔥 切換顯示 Admin List 的按鈕 */}
       <Button
         variant="outlined"
         fullWidth
-        sx={{ mb: 2 }}
+        sx={{ mb: 2 , mt:2 }}
         onClick={() => setShowUsers(!showUsers)}
       >
         {showUsers ? "隱藏 Admin List" : "顯示 Admin List"}
@@ -110,9 +116,6 @@ export default function Register() {
       {/* ✅ Admin List，只有當 `showUsers` 為 true 才顯示 */}
       {showUsers && (
         <Paper sx={{ p: 2 }}>
-          <Typography variant="h6" fontWeight="bold" mb={2}>
-            Admin List
-          </Typography>
           {users.length > 0 ? (
             users.map((user) => (
               <Box
@@ -137,6 +140,7 @@ export default function Register() {
           )}
         </Paper>
       )}
+      </Paper>
     </Box>
   );
 }

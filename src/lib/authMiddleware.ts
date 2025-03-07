@@ -26,7 +26,7 @@ export function authMiddleware(handler: (req: NextRequest) => Promise<NextRespon
 
       // ✅ Attach user info to request for later use
       req.headers.set("userId", user.userId);
-      req.headers.set("email", user.email);
+      req.headers.set("email", user.username);
 
       return handler(req);
       

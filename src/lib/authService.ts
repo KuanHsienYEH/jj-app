@@ -5,7 +5,7 @@ const TOKEN_EXPIRY = "1h"; // Token expires in 1 hour
 
 interface AuthPayload {
   userId: string;
-  email: string;
+  username: string;
 }
 
 // ✅ Generate a JWT token
