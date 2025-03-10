@@ -5,7 +5,7 @@ import { Container, Box, Button, Stack } from "@mui/material";
 import Shared from "./components/Shared"; // ✅ Import the UI Layout
 import LatestJob from "./components/LatestJob";
 import Service from "./components/Service";
-import Reward from "./components/Reward";
+
 
 // ✅ Import global SCSS
 import "@/styles/main.scss"; // Ensure this file exists
@@ -41,17 +41,16 @@ export default function Homepage() {
           </Container>
         </div>
 
-        {/* Latest Job Section */}
-        <LatestJob />
-
         {/* Services Section */}
         <Service />
 
-        {/* Awards & Services Section */}
+        {/* Latest Job Section */}
+        <LatestJob />
+
+        
+
         <Container>
-        <Box sx={{...style.awardServiceBox}}>
-          <Reward />
-        </Box>
+
       </Container>
       </Container>
     </Shared>

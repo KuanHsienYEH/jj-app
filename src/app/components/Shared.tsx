@@ -1,41 +1,83 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import {
-  AppBar, Box, Button, CssBaseline, Divider, Drawer, Grid,
-  IconButton, List, ListItem, ListItemButton, ListItemText,
-  Slide, Toolbar, Typography, useScrollTrigger, useMediaQuery
+  AppBar,
+  Box,
+  Button,
+  CssBaseline,
+  IconButton,
+  Divider,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemText,
+  Slide,
+  Toolbar,
+  Typography,
+  useScrollTrigger,
+  useMediaQuery,
+  Menu,
+  MenuItem,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import FacebookIcon from "@mui/icons-material/Facebook";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPhone, faEnvelope, faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import Footer from './Footer';
 
-// ✅ Import global styles
-import "@/styles/main.scss"; 
+interface HideOnScrollProps {
+  children: React.ReactElement;
+}
+
+interface NavItem {
+  label: string;
+  path: string;
+  subItems?: { label: string; path: string }[];
+}
 
 const drawerWidth = 240;
-const navItems = [
+
+const navItems: NavItem[] = [
   { label: "Home", path: "/" },
-  { label: "About", path: "/about" },
-  { label: "Contact", path: "/contact" }
+  {
+    label: "About",
+    path: "/about",
+    subItems: [
+      { label: "公司介紹", path: "/about/company-profile" },
+      { label: "許可證", path: "/about/license" },
+      { label: "歷年評鑑成績", path: "/about/evaluation-results" },
+    ],
+  },
+  { label: "Contact", path: "/contact" },
 ];
 
-function HideOnScroll({ children }: { children: React.ReactElement }) {
+function HideOnScroll({ children }: HideOnScrollProps) {
   const trigger = useScrollTrigger();
   return <Slide appear={false} direction="down" in={!trigger}>{children}</Slide>;
 }
 
-export default function Layout({ children }: { children: React.ReactNode }) {
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+export default function Layout({ children }: LayoutProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null); // 控制下拉選單
   const router = useRouter();
   const year = new Date().getFullYear();
   const isMobile = useMediaQuery("(max-width:425px)");
 
-  const handleDrawerToggle = () => setMobileOpen(!mobileOpen);
+  const handleDrawerToggle = () => {
+    setMobileOpen(!mobileOpen);
+  };
+
+  const handleMenuOpen = (event: React.MouseEvent<HTMLElement>) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleMenuClose = () => {
+    setAnchorEl(null);
+  };
 
   const drawer = (
     <Box onClick={handleDrawerToggle} sx={{ textAlign: "center" }}>
@@ -61,7 +103,16 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <CssBaseline />
         <HideOnScroll>
           <AppBar component="nav">
-            <Toolbar sx={{ bgcolor: "#708090", padding: "0 3rem" }}>
+            <Toolbar
+              sx={{
+                bgcolor: "#2E4A7D",
+                padding: "0 3rem",
+                boxShadow: "0 2px 10px rgba(0, 0, 0, 0.1)",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "space-between",
+              }}
+            >
               <IconButton
                 color="inherit"
                 edge="start"
@@ -70,14 +121,98 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               >
                 <MenuIcon />
               </IconButton>
-              <Typography variant="h6" component="div" sx={{ flexGrow: 1, display: { xs: "none", sm: "block" } }}>
-                <Image src="/images/logo.png" width={200} height={50} alt="Logo" onClick={() => router.push("/")} />
+              <Typography
+                variant="h6"
+                component="div"
+                sx={{ display: { xs: "none", sm: "block" } }}
+              >
+                <Box
+                  sx={{
+                    bgcolor: "#FFFFFF",
+                    borderRadius: "4px",
+                    padding: "4px 8px",
+                    display: "inline-block",
+                  }}
+                >
+                  <Image
+                    src="/images/logo.png"
+                    width={200}
+                    height={50}
+                    alt="Logo"
+                    onClick={() => router.push("/")}
+                    style={{ cursor: "pointer" }}
+                  />
+                </Box>
               </Typography>
               <Box sx={{ display: { xs: "none", sm: "block" } }}>
-                {navItems.map(({ label, path }) => (
-                  <Button key={label} component={Link} href={path} sx={{ color: "#fff" }}>
-                    {label}
-                  </Button>
+                {navItems.map(({ label, path, subItems }) => (
+                  <Box key={label} sx={{ display: "inline-block" }}>
+                    {subItems ? (
+                      <>
+                        <Button
+                          onMouseEnter={handleMenuOpen}
+                          sx={{
+                            color: "#FFFFFF",
+                            "&:hover": { bgcolor: "rgba(255, 255, 255, 0.1)" },
+                          }}
+                        >
+                          {label}
+                        </Button>
+                        <Menu
+                          anchorEl={anchorEl}
+                          open={Boolean(anchorEl)}
+                          onClose={handleMenuClose}
+                          MenuListProps={{ onMouseLeave: handleMenuClose }}
+                          disableScrollLock={true}
+                          anchorOrigin={{ vertical: "bottom", horizontal: "left" }}
+                          transformOrigin={{ vertical: "top", horizontal: "left" }}
+                          sx={{
+                            "& .MuiPaper-root": {
+                              bgcolor: "#F5F7FA",
+                              color: "#333333",
+                              minWidth: "200px",
+                              maxWidth: "300px",
+                              borderRadius: "8px",
+                              boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
+                              border: "1px solid #E0E5EA",
+                            },
+                          }}
+                        >
+                          {subItems.map((subItem) => (
+                            <MenuItem
+                              key={subItem.label}
+                              component={Link}
+                              href={subItem.path}
+                              onClick={handleMenuClose}
+                              sx={{
+                                "&:hover": { bgcolor: "#E0E5EA" },
+                                padding: "10px 24px",
+                                borderBottom: "1px solid #E0E5EA",
+                                "&:last-child": { borderBottom: "none" },
+                                textAlign: "center",
+                                whiteSpace: "nowrap",
+                                overflow: "hidden",
+                                textOverflow: "ellipsis",
+                              }}
+                            >
+                              {subItem.label}
+                            </MenuItem>
+                          ))}
+                        </Menu>
+                      </>
+                    ) : (
+                      <Button
+                        component={Link}
+                        href={path}
+                        sx={{
+                          color: "#FFFFFF",
+                          "&:hover": { bgcolor: "rgba(255, 255, 255, 0.1)" },
+                        }}
+                      >
+                        {label}
+                      </Button>
+                    )}
+                  </Box>
                 ))}
               </Box>
             </Toolbar>
@@ -98,39 +233,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           {children}
         </Box>
       </Box>
-
-      <footer className="footer">
-        <Grid container spacing={3}>
-          <Grid item md={4} sm={12} xs={12}>
-            <Typography className="corpname" variant={isMobile ? "body1" : "h5"} gutterBottom>
-              <b>巨將人力資源顧問有限公司</b>
-            </Typography>
-            <Box mt={2}>
-              <Typography>
-                <FontAwesomeIcon icon={faLocationDot} />
-                <Link href="https://maps.app.goo.gl/XSiGu9tZtJGRhQV19" target="_blank">
-                  106001 台北市大安區信義路二段
-                </Link>
-              </Typography>
-              <Typography>
-                <FontAwesomeIcon icon={faPhone} />
-                <Link href="tel:0223569977">(02) 2356-9977</Link>
-              </Typography>
-              <Typography>
-                <FontAwesomeIcon icon={faEnvelope} />
-                <Link href="mailto:service@jujianghr.com.tw">service@jujianghr.com.tw</Link>
-              </Typography>
-              <Link href="https://www.facebook.com/Jujianghr" target="_blank">
-                <FacebookIcon fontSize="large" color="primary" />
-              </Link>
-            </Box>
-          </Grid>
-        </Grid>
-        <Box mt={4} textAlign="center">
-          <Typography>北市就服字 第0229號</Typography>
-          <Typography>© 2012-{year} Ju Jiang Human Resources Consultant Co., Ltd.</Typography>
-        </Box>
-      </footer>
+      <Footer year={year} />
     </div>
   );
 }

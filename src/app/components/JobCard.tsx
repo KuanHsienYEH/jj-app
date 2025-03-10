@@ -20,10 +20,10 @@ export default function JobCard({ job }: { job: Job }) {
 
   return (
     <Card variant="outlined" className="slick-card">
-      <Link href={`/jobs/${job._id}`} passHref>
+      <Link style={{textDecoration:"none"}} href={`/jobs/${job._id}`} passHref>
         <CardActionArea>
           <CardContent>
-            <Typography variant="h5" component="div">
+            <Typography color="black" variant="h5" component="div">
               {job.jobTitle}
             </Typography>
             <Box sx={{ mt: 1.5 }} color="text.secondary">

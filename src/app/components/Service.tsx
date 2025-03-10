@@ -60,11 +60,13 @@ export default function Service() {
   const [currentSlide, setCurrentSlide] = useState(0);
   const totalSlides = serviceData.length;
 
+  
+
   useEffect(() => {
     const interval = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev > 0) return prev - 1;
-        handleNextSlide();
+        handleNextSlideClick();
         return duration;
       });
     }, 1000);
@@ -72,24 +74,27 @@ export default function Service() {
     return () => clearInterval(interval);
   }, []);
 
-  const handlePrevSlide = () => {
-    slick.current?.slickPrev();
-    setCurrentSlide((prev) => (prev - 1 + totalSlides) % totalSlides);
+  const handlePreSlideCLick = ()=>{
+    const newSlideIndex = (currentSlide - 1 + totalSlides) % totalSlides;
+    slick?.current?.slickPrev()
+    setCurrentSlide(newSlideIndex)
     setTimeLeft(duration);
-  };
-
-  const handleNextSlide = () => {
-    slick.current?.slickNext();
-    setCurrentSlide((prev) => (prev + 1) % totalSlides);
+  }
+  const handleNextSlideClick = ()=>{
+    const newSlideIndex = (currentSlide + 1) % totalSlides;
+    slick?.current?.slickNext()
+    setCurrentSlide(newSlideIndex)
     setTimeLeft(duration);
-  };
+  }
 
   const settings = {
     autoplaySpeed: 5000,
     infinite: true,
     slidesToShow: 1,
     slidesToScroll: 1,
-    fade: true,
+    waitForAnimate: false,
+    fade:true,
+    arrows: false,
   };
 
   return (
@@ -107,9 +112,9 @@ export default function Service() {
           </b>
         </Typography>
         <Stack direction="row"  justifyContent="space-around" alignItems="center" className={styles.serviceStack}>
-          <ArrowBackIosIcon className={styles.serviceStackBtn} onClick={handlePrevSlide} />
+          <ArrowBackIosIcon className={styles.serviceStackBtn} onClick={()=>handlePreSlideCLick()} />
           <CountdownCircle currentSlide={currentSlide} count={totalSlides} timeLeft={timeLeft} duration={duration} />
-          <ArrowForwardIosIcon className={styles.serviceStackBtn} onClick={handleNextSlide} />
+          <ArrowForwardIosIcon className={styles.serviceStackBtn} onClick={()=>handleNextSlideClick()} />
         </Stack>
         <Button
         sx={{

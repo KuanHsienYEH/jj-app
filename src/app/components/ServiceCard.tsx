@@ -30,7 +30,12 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service, index }) => {
     >
       <Card sx={{ backgroundColor: "transparent", boxShadow: "none" }}>
         <CardContent sx={{ display: "flex", flexDirection: "column" }}>
-          <Stack direction="column" justifyContent="center" alignItems="center">
+          <Stack sx={{
+            width: 'fit-content',
+            '@media (max-width:768px)': {
+                p:'0',
+            },
+          }} direction="column" justifyContent="center" alignItems="center">
             <Typography sx={{ fontSize: 14 }} color="text.secondary" gutterBottom>
               服務
             </Typography>
