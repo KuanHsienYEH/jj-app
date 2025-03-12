@@ -6,7 +6,7 @@ import { useRouter, usePathname } from "next/navigation";
 import "@/styles/main.scss"; // 匯入全局 SCSS
 
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
+export default function AdminPage() {
   const router = useRouter();
   const pathname = usePathname();
   const currentTab = pathname.split("/")[2] || "menu";
