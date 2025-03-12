@@ -1,35 +1,46 @@
-// hooks/useJobs.ts
-import { useState, useEffect } from "react";
+import { NextResponse } from "next/server";
+import { withDB, withMethod } from "../../../../lib/middleware";
+import { getJobs } from "../../../../controllers/jobsController";
+import { ApiResponse } from "../../../../types/api";
+import { NextRequest } from "next/server";
 
-const API_URL = "/api/jobs/get-jobs";
+export const GET = withDB(withMethod(["GET"], async (req: NextRequest) => {
+  try {
+    const url = new URL(req.url);
+    const page = parseInt(url.searchParams.get("page") || "1", 10);
+    const limit = parseInt(url.searchParams.get("limit") || "10", 10);
+    const keyword = url.searchParams.get("keyword") || ""; // ✅ 修正 keyword 參數
 
-export const useJobs = () => {
-  const [jobs, setJobs] = useState([]);
-  const [page, setPage] = useState(1);
-  const [loading, setLoading] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
+    console.log(`Fetching jobs - Page: ${page}, Limit: ${limit}, Keyword: '${keyword}'`);
 
-  useEffect(() => {
-    fetchJobs();
-  }, []);
-
-  const fetchJobs = async () => {
-    if (!hasMore || loading) return;
-
-    setLoading(true);
-    try {
-      const res = await fetch(`${API_URL}?page=${page}&limit=10`);
-      const data = await res.json();
-      if (data.status === "success") {
-        setJobs((prev) => [...prev, ...data.jobs]); // ✅ 累加資料
-        setPage(page + 1);
-        if (data.jobs.length < 10) setHasMore(false); // 如果不足 10 筆，就不再請求
-      }
-    } catch (err) {
-      console.error("Error fetching jobs:", err);
+    // 確保 page 和 limit 合法
+    if (page < 1 || limit < 1) {
+      return NextResponse.json(
+        { status: "error", message: "Invalid pagination parameters" },
+        { status: 400 }
+      );
     }
-    setLoading(false);
-  };
 
-  return { jobs, fetchJobs, loading, hasMore };
-};
+    // ✅ 修正錯誤，確保 keyword 正確傳入
+    const response: ApiResponse = await getJobs(page, limit, keyword);
+
+    // 確保 response 格式正確
+    if (!response || response.status !== "success") {
+      return NextResponse.json(
+        { status: "error", message: "Failed to fetch jobs" },
+        { status: 500 }
+      );
+    }
+
+    console.log("Response from getJobs:", JSON.stringify(response, null, 2));
+
+    return NextResponse.json(response, { status: 200 });
+
+  } catch (error) {
+    console.error("Error in GET /api/jobs/get-jobs:", error);
+    return NextResponse.json(
+      { status: "error", message: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}));
