@@ -2,13 +2,11 @@
 
 import { useRouter } from "next/navigation";
 import { Container, Box, Button, Stack } from "@mui/material";
-import Shared from "./components/Shared"; // ✅ Import the UI Layout
 import LatestJob from "./components/LatestJob";
 import Service from "./components/Service";
 
 
 // ✅ Import global SCSS
-import "@/styles/main.scss"; // Ensure this file exists
 
 export default function Homepage() {
   const router = useRouter();
@@ -25,7 +23,7 @@ export default function Homepage() {
   }
 
   return (
-    <Shared> {/* ✅ Wrap the page inside <Layout> to include Navbar & Footer */}
+    
       <Container>
         {/* Hero Section */}
         <div className="layout__root">
@@ -51,8 +49,7 @@ export default function Homepage() {
 
         <Container>
 
+        </Container>
       </Container>
-      </Container>
-    </Shared>
   );
 }
