@@ -10,7 +10,7 @@ export default async function JobDetailPage({ params }: JobDetailPageProps) {
   const { id } = params;
 
   // Fetch job data on the server
-  const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"; // ✅ 確保完整 URL
+  const baseUrl =  typeof window !== "undefined" ? window.location.origin : "";
   const res = await fetch(`${baseUrl}/api/jobs/get-jobs?id=${id}`, {
     cache: "no-store", // Ensure fresh data for dynamic routes
   });

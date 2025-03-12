@@ -12,7 +12,7 @@ export default function Homepage() {
   const router = useRouter();
 
   const handleJobSeekers = () => {
-    router.push("/jobs");
+    router.push("/job");
   };
 
   const style={

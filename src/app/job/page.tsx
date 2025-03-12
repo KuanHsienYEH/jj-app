@@ -3,7 +3,7 @@ import { Job } from "../types/jobs";
 
 async function getJobs(): Promise<Job[]> {
   try {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"; // ✅ 確保完整 URL
+    const baseUrl =  typeof window !== "undefined" ? window.location.origin : "";
     const res = await fetch(`${baseUrl}/api/jobs/get-jobs?page=1&limit=10`, {
       cache: "no-store", // ✅ 避免快取，確保資料即時更新
     });

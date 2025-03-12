@@ -18,7 +18,7 @@ export default function JobItem({ job, onApply, onSave }: JobItemProps) {
   const router = useRouter();
 
   const handleShare = () => {
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"; 
+    const baseUrl =  typeof window !== "undefined" ? window.location.origin : "";
     const jobDetailUrl = `${baseUrl}/job/${job._id}`;
     navigator.clipboard.writeText(jobDetailUrl).then(() => {
       setSnackbarOpen(true);
