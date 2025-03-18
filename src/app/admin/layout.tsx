@@ -65,38 +65,62 @@ export default function PersistentDrawerLeft({ children }: { children: React.Rea
   const theme = useTheme();
   const [open, setOpen] = useState(true);
   const [currentTab, setCurrentTab] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true); // 🔥 新增 loading 狀態
+  const [loading, setLoading] = useState(true); // 🔥 初始化為 `true`
   const router = useRouter();
   const pathname = usePathname();
 
-  // // ✅ 確保用戶已登入，否則跳轉到 /login
-  // useEffect(() => {
-  //   const token = localStorage.getItem("token");
-  //   if (!token) {
-  //     router.push("/login");
-  //   } else {
-  //     setLoading(false); // ✅ 只有在 Token 存在時，才移除 loading 狀態
-  //   }
-  // }, []);
+  // ✅ 透過 API 檢查用戶登入狀態
+  useEffect(() => {
+    let isMounted = true; // 避免組件卸載後仍更新狀態
+  
+    const checkAuth = async () => {
+      try {
+        const res = await fetch("/api/auth/me", { credentials: "include" });
+  
+        if (!res.ok) throw new Error("Not authenticated");
+  
+        const data = await res.json();
+        if (data.status !== "success") throw new Error("Not authenticated");
+  
+        if (isMounted) {
+          setLoading(false);
+        }
+      } catch (error) {
+        if (isMounted) {
+          setLoading(false);
+          router.replace("/login"); // 🔥 只在錯誤時導向 `/login`
+        }
+      }
+    };
+  
+    checkAuth();
+  
+    return () => {
+      isMounted = false; // 避免內存洩漏
+    };
+  }, [router]);
 
   useEffect(() => {
-    setCurrentTab(pathname.split("/")[2] || "menu");
+    setCurrentTab(pathname.split("/")[2] || null);
   }, [pathname]);
 
   const handleLogout = async () => {
-    await fetch("/api/logout", { method: "POST" });
-    localStorage.removeItem("token");
-    router.push("/login");
+    try {
+      await fetch("/api/auth/logout", { method: "POST", credentials: "include" }); // ✅ 確保 Cookie 也會被清除
+      router.replace("/login");
+    } catch (error) {
+      console.error("登出失敗:", error);
+    }
   };
 
   const handleDrawerOpen = () => setOpen(true);
   const handleDrawerClose = () => setOpen(false);
   const handleTabClick = (tab: string) => router.push(tab === "menu" ? "/admin" : `/admin/${tab}`);
 
-  // ✅ 如果還在檢查登入狀態，避免渲染畫面，防止 /admin 閃一下
-  //if (loading) return null;
+  // ✅ 只有在驗證完成後，才渲染 UI，防止 `/admin` 閃爍
+  if (loading) return null;
 
-  const currentTitle = menuItems.find((item) => item.id === currentTab)?.text || "巨將管理後台";
+  const currentTitle = menuItems.find((item) => item.id === currentTab)?.text || "管理後台";
 
   return (
     <Box sx={{ display: "flex" }}>

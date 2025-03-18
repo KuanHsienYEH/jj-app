@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
@@ -12,13 +12,16 @@ import Image from "next/image";
 
 export default function Login() {
   const router = useRouter();
-  const [username, setUsername] = useState("");
-  const [pwd, setPwd] = useState("");
+  const usernameRef = useRef<HTMLInputElement>(null);
+  const pwdRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     setError("");
+
+    const username = usernameRef.current?.value;
+    const pwd = pwdRef.current?.value;
 
     if (!username || !pwd) {
       setError("Please enter username and password.");
@@ -29,18 +32,16 @@ export default function Login() {
       const res = await fetch("/api/user/login", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        credentials: "include", // ✅ 確保 Cookie 傳送
         body: JSON.stringify({ username, pwd }),
       });
 
-      const data = await res.json();
-      if (data.status !== "success") {
+      if (!res.ok) {
         setError("Invalid username or password.");
         return;
       }
 
-      // ✅ Store token and redirect
-      localStorage.setItem("token", data.data.token);
-      router.push("/admin"); // ✅ Redirect to Admin Dashboard
+      router.push("/admin"); // ✅ 後端管理 JWT，前端不存 Token
     } catch (error) {
       setError("An error occurred. Please try again.");
     }
@@ -53,24 +54,8 @@ export default function Login() {
         <Image src="/images/logo.png" alt="logo" width={160} height={60} />
 
         <Box component="form" onSubmit={handleSubmit} noValidate sx={{ mt: 2 }}>
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            label="Username"
-            autoComplete="username"
-            autoFocus
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <TextField
-            margin="normal"
-            required
-            fullWidth
-            type="password"
-            label="Password"
-            autoComplete="current-password"
-            onChange={(e) => setPwd(e.target.value)}
-          />
+          <TextField margin="normal" required fullWidth label="Username" autoComplete="username" autoFocus inputRef={usernameRef} />
+          <TextField margin="normal" required fullWidth type="password" label="Password" autoComplete="current-password" inputRef={pwdRef} />
           {error && (
             <Typography color="error" sx={{ mt: 1 }}>
               {error}

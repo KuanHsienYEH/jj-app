@@ -6,7 +6,7 @@ export const MENU_ID = Object.freeze({
   EMAIL: "email",
   JOBS: "jobs",
   JOBSEEKERS: "jobseekers",
-  ARTICLE: "article",
+  ARTICLE: "news",
   MESSAGE: "message",
 });
 

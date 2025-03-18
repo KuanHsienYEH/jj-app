@@ -1,5 +1,6 @@
 'use client'
 import Image from "next/image";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -68,6 +69,18 @@ export default function Layout({ children }: LayoutProps) {
   const router = useRouter();
   const year = new Date().getFullYear();
   const isMobile = useMediaQuery("(max-width:425px)");
+  const pathname = usePathname();
+
+  //分離admin layout
+  if (pathname.startsWith("/admin")) {
+    return (
+      <html>
+        <body>
+          <>{children}</>
+        </body>
+      </html>
+    );
+  }
 
   const handleDrawerToggle = () => {
     setMobileOpen(!mobileOpen);
