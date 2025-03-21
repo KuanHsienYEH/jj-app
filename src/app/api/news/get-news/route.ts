@@ -1,7 +1,7 @@
 import { NextResponse, NextRequest } from "next/server";
 import { withDB, withMethod } from "../../../../lib/middleware";
 import { getNews } from "../../../../controllers/newsController";
-import { NewsApiResponse } from "../../../../types/api";
+import { ApiResponse } from "../../../../types/api";
 
 export const GET = withDB(
   withMethod(["GET"], async (req: NextRequest) => {
@@ -18,7 +18,7 @@ export const GET = withDB(
         );
       }
 
-      const response: NewsApiResponse = await getNews(page, limit, keyword);
+      const response: ApiResponse = await getNews(page, limit, keyword);
 
       if (!response || response.status !== "success" || !response.data) {
         return NextResponse.json(

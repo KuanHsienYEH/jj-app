@@ -192,7 +192,7 @@ export default function JobModal({ jobTitle, modalOpen, toggleModal }: JobModalP
       const form = event.currentTarget;
       const validData = await schema.validate(
         {
-          name: form.name.value,
+          name: form.name,
           phone: form.phone.value,
           email: form.email.value,
           gender: form.gender.value,

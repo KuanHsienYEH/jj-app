@@ -1,5 +1,5 @@
 import News from "@/models/News";
-import { JobApiResponse, ApiResponse } from "@/types/api";
+import { ApiResponse } from "@/types/api";
 import { S3Client, DeleteObjectCommand,PutObjectCommand } from "@aws-sdk/client-s3";
 import { v4 as uuidv4 } from "uuid";
 import mime from "mime-types";
@@ -44,7 +44,7 @@ async function uploadImageToS3(file: File): Promise<{ status: string; imageUrl?:
   }
 
 /** ✅ 取得新聞列表 */
-export async function getNews(page: number = 1, limit: number = 10, keyword?: string): Promise<JobApiResponse> {
+export async function getNews(page: number = 1, limit: number = 10, keyword?: string): Promise<ApiResponse> {
   try {
     let query = News.find();
 

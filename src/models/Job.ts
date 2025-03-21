@@ -18,7 +18,7 @@ const jobSchema: Schema = new Schema({
   location: { type: String, required: true },
   salary: { type: String, required: true },
   requirement: { type: String, required: true },
-  benefit: { type: String, required: true },
+  benefit: { type: String, required: false },
   jobDetail: { type: String, required: true },
   jobType: { type: String, required: true },
   createDate: { type: Date, required: true },

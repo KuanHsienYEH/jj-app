@@ -41,7 +41,7 @@ export default function JobList({ initialJobs = [], initialHasMore = true }: Job
   }, [fetchedJobs, fetchedHasMore]);
 
   const handleFetchMore = async () => {
-    await fetchJobs(page); // Fetch jobs for the current page
+    await fetchJobs(); // Fetch jobs for the current page
     setPage((prevPage) => prevPage + 1); // Increment page for the next fetch
   };
 

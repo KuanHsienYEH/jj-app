@@ -1,12 +1,13 @@
 import { NextResponse, NextRequest } from "next/server";
-import { withDB, withMethod } from "../../../../../lib/middleware";
-import { getNewsById } from "../../../../../controllers/newsController";
-import { ApiResponse } from "../../../../../types/api";
+import { withDB, withMethod } from "@/lib/middleware";
+import { getNewsById } from "@/controllers/newsController";
+import { ApiResponse } from "@/types/api";
 
 export const GET = withDB(
-  withMethod(["GET"], async (req: NextRequest, { params }: { params: { id: string } }) => {
+  withMethod(["GET"], async (req: NextRequest) => {
     try {
-      const { id } = params;
+      const urlParts = req.nextUrl.pathname.split("/");
+      const id = urlParts[urlParts.length - 1];
 
       if (!id) {
         return NextResponse.json(

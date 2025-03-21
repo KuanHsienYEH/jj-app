@@ -147,6 +147,7 @@ export default function NewsPage() {
       {isPopupVisible && selectedNews && (
         <NewsPopup
           {...selectedNews}
+          uploading={uploading}
           setTitle={(value) => setSelectedNews((prev) => ({ ...prev!, title: value }))}
           setContent={(value) => setSelectedNews((prev) => ({ ...prev!, content: value }))}
           setImage={(value) => setSelectedNews((prev) => ({ ...prev!, image: value }))}

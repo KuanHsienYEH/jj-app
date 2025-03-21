@@ -6,6 +6,9 @@ export function authMiddleware(handler: (req: NextApiRequest, res: NextApiRespon
     const auth = req.headers["authorization"];
     const token = auth && auth.split(" ")[1];
 
+    console.log(token)
+    console.log(res)
+
     if (!token) {
       return res.status(401).json({ status: "error", message: "No token provided" });
     }

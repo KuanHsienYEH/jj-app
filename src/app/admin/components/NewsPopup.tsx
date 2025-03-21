@@ -14,8 +14,8 @@ import TiptapEditor from "./TiptapEditor";
 interface NewsPopupProps {
   title: string;
   content: string;
-  image: string;
-  excerpt: string;
+  image?: string;
+  excerpt?: string;
   setTitle: (value: string) => void;
   setContent: (value: string) => void;
   setImage: (value: string) => void;
@@ -30,8 +30,8 @@ interface NewsPopupProps {
 export default function NewsPopup({
   title,
   content,
-  image,
-  excerpt,
+  image="",
+  excerpt="",
   setTitle,
   setContent,
   setImage,

@@ -1,7 +1,7 @@
 import Job from "../models/Job";
-import { JobApiResponse, ApiResponse } from "../types/api";
+import { ApiResponse } from "../types/api";
 
-export async function getJobs(page: number = 1, limit: number = 10, keyword?: string): Promise<JobApiResponse> {
+export async function getJobs(page: number = 1, limit: number = 10, keyword?: string): Promise<ApiResponse> {
   try {
     let query = Job.find();
 
@@ -52,15 +52,19 @@ export async function addJob(data: {
   location: string;
   salary: string;
   requirement: string;
-  benefit: string;
   jobDetail: string;
   jobType: string;
   createDate: string;
   education: string;
   seniority: string;
 }): Promise<ApiResponse> {
-  await Job.create({ ...data, createDate: new Date(data.createDate) });
-  return { status: "success", data: { res: "ok" } };
+  try {
+    const newJob = await Job.create({ ...data, createDate: new Date(data.createDate) });
+    return { status: "success", data: newJob }; // 返回完整的 Job 物件
+  } catch (error) {
+    console.error("❌ Error in addJob:", error);
+    return { status: "error", message: "Failed to add job" };
+  }
 }
 
 export async function updateJob(data: {
@@ -69,19 +73,33 @@ export async function updateJob(data: {
   location: string;
   salary: string;
   requirement: string;
-  benefit: string;
+  benefit?: string;
   jobDetail: string;
   jobType: string;
   createDate: string;
   education: string;
   seniority: string;
 }): Promise<ApiResponse> {
-  const result = await Job.updateOne(
-    { _id: data._id },
-    { $set: { ...data, createDate: new Date(data.createDate) } }
-  );
-  if (result.modifiedCount > 0) return { status: "success", data: { res: "ok" } };
-  return { status: "error", message: "Job not found" };
+  try {
+    // 使用 findOneAndUpdate 返回更新後的資料
+    const updatedJob = await Job.findOneAndUpdate(
+      { _id: data._id },
+      { $set: { ...data, createDate: new Date(data.createDate) } },
+      { new: true, runValidators: true } // 返回更新後的資料並執行驗證
+    );
+
+    if (!updatedJob) {
+      return { status: "error", message: "Job not found" };
+    }
+
+    return {
+      status: "success",
+      data: updatedJob, // 返回完整的 Job 物件
+    };
+  } catch (error) {
+    console.error(" updateJob 錯誤:", error);
+    return { status: "error", message: "更新職缺失敗" };
+  }
 }
 
 export async function deleteJob(id: string): Promise<ApiResponse> {

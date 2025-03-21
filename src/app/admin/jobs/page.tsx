@@ -3,7 +3,7 @@
 import { useState, useEffect, useCallback } from "react";
 import JobPopup from "../components/JobPopup";
 import { Job, Pagination } from "@/types/jobs";
-import { JobApiResponse } from "@/types/api";
+import { ApiResponse } from "@/types/api";
 import Button from "@mui/material/Button";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -31,41 +31,50 @@ export default function JobPage() {
   const [currPage, setCurrPage] = useState({ page: 1, limit: 10, keyword: "" });
   const [loading, setLoading] = useState(true);
 
-  // ✅ 請求 API 取得職缺資料
-  useEffect(() => {
-    const fetchJobs = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch(
-          `/api/jobs/get-jobs?page=${currPage.page}&limit=${currPage.limit}&keyword=${currPage.keyword}`,
-          {
-            method: "GET",
-            headers: { "Content-Type": "application/json" },
-          }
-        );
-
-        if (!res.ok) throw new Error("Failed to fetch jobs");
-        const data: JobApiResponse = await res.json();
-
-        if (data.status === "success" && data.data) {
-          setJobs(data.data.jobs);
-          setPagination(data.data.pagination);
-        } else {
-          console.error("Invalid response:", data);
-          setJobs([]);
-          setPagination(null);
+  const fetchJobs = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(
+        `/api/jobs/get-jobs?page=${currPage.page}&limit=${currPage.limit}&keyword=${currPage.keyword}`,
+        {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
         }
-      } catch (error) {
-        console.error("Error fetching jobs:", error);
+      );
+
+      if (!res.ok) throw new Error("Failed to fetch jobs");
+      const data: ApiResponse = await res.json();
+
+      if (data.status === "success" && data.data) {
+        setJobs(data.data.jobs);
+        setPagination(data.data.pagination);
+      } else {
+        console.error("Invalid response:", data);
         setJobs([]);
         setPagination(null);
-      } finally {
-        setLoading(false);
       }
-    };
+    } catch (error) {
+      console.error("Error fetching jobs:", error);
+      setJobs([]);
+      setPagination(null);
+    } finally {
+      setLoading(false);
+    }
+  };
 
+  // ✅ 請求 API 取得職缺資料
+  useEffect(() => {
     fetchJobs();
   }, [currPage]);
+
+  useEffect(() => {
+    console.log("Jobs updated in JobPage:", jobs);
+    // 檢查是否有缺少 _id 的資料
+    const invalidJobs = jobs.filter((job) => !job._id);
+    if (invalidJobs.length > 0) {
+      console.warn("發現缺少 _id 的資料:", invalidJobs);
+    }
+  }, [jobs])
 
   // ✅ 使用 debounce 處理搜尋輸入，避免過多 API 請求
   const handleSearchChange = useCallback(
@@ -154,7 +163,8 @@ export default function JobPage() {
             ))
           ) : jobs.length > 0 ? (
             // ✅ 顯示職缺資料
-            jobs.map((job) => (
+            jobs.filter((job) => job._id) // 過濾掉無效的 job
+            .map((job) => (
               <TableRow key={job._id}>
                 <TableCell>
                 {job.isActive ? 
@@ -208,6 +218,7 @@ export default function JobPage() {
           job={selectedJob}
           emitPopup={setPopupVisible}
           open={isPopupVisible}
+          fetchJobs={fetchJobs}
         />
       )}
     </TableContainer>

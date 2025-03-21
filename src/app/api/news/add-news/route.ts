@@ -24,8 +24,15 @@ export const POST = withDB(
 
       return NextResponse.json(response, { status: 200 });
     } catch (error) {
-      console.error("❌ 更新 API 錯誤:", error);
-      return NextResponse.json({ status: "error", message: "內部伺服器錯誤", error: error.message }, { status: 500 });
-    }
+      let errorMessage = "Unknown error";
+        if (error instanceof Error) {
+          errorMessage = error.message;
+        }
+        console.error("❌ 更新 API 錯誤:", error);
+        return NextResponse.json(
+          { status: "error", message: "內部伺服器錯誤", error: errorMessage },
+          { status: 500 }
+        );
+      }
   }))
 );

@@ -9,6 +9,7 @@ export interface Job {
     jobDetail: string;
     requirement: string;
     isActive: boolean;
+    createDate: string;
   }
   
   export interface Pagination {

@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { withDB, withMethod } from "../../../../lib/middleware";
 import { getJobs } from "../../../../controllers/jobsController";
-import { JobApiResponse } from "../../../../types/api";
+import { ApiResponse } from "../../../../types/api";
 import { NextRequest } from "next/server";
 
 export const GET = withDB(withMethod(["GET"], async (req: NextRequest) => {
@@ -22,7 +22,7 @@ export const GET = withDB(withMethod(["GET"], async (req: NextRequest) => {
     }
 
     // 呼叫 getJobs 並傳入 page、limit 和 keyword
-    const response: JobApiResponse = await getJobs(page, limit, keyword);
+    const response: ApiResponse = await getJobs(page, limit, keyword);
 
     // 確保 response 格式正確
     if (!response || response.status !== "success" || !response.data) {

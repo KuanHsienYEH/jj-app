@@ -19,7 +19,7 @@ export default function JobDetailWrapper({ job }: JobDetailWrapperProps) {
   return (
     <>
       <JobDetail currJob={job} toggleModal={toggleModal} />
-      <JobModal job={job} modalOpen={modalOpen} toggleModal={toggleModal} />
+      <JobModal jobTitle={job.jobTitle} modalOpen={modalOpen} toggleModal={toggleModal} />
     </>
   );
 }

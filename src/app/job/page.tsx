@@ -1,11 +1,18 @@
 import JobList from "../components/JobList";
-import { Job } from "../types/jobs";
+import { Job } from "@/types/jobs";
+import { headers } from "next/headers";
+
+export const dynamic = "force-dynamic";
 
 async function getJobs(): Promise<Job[]> {
   try {
-    const baseUrl =  typeof window !== "undefined" ? window.location.origin : "";
+    //因為這邊是server component 所以url要從後端拿
+    const reqHeaders = await headers();
+    const host = reqHeaders.get("host");
+    const protocol = process.env.NODE_ENV === "development" ? "http" : "https";
+    const baseUrl = `${protocol}://${host}`;
     const res = await fetch(`${baseUrl}/api/jobs/get-jobs?page=1&limit=10`, {
-      cache: "no-store", // ✅ 避免快取，確保資料即時更新
+      cache: "no-store",
     });
 
     if (!res.ok) {
@@ -22,7 +29,11 @@ async function getJobs(): Promise<Job[]> {
 }
 
 export default async function JobsPage() {
-  const jobs = await getJobs(); // ✅ Server-Side Fetching
+  const jobs = await getJobs();
 
-  return <JobList initialJobs={jobs} />;
+  return (
+    <main>
+      <JobList initialJobs={jobs} />
+    </main>
+  );
 }

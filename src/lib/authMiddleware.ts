@@ -5,7 +5,7 @@ export function authMiddleware(handler: (req: NextRequest) => Promise<NextRespon
   return async (req: NextRequest): Promise<NextResponse> => {
     try {
       // ✅ 只允許從 `HttpOnly Cookie` 讀取 Token
-      const token = req.cookies.get("token")?.value;
+      const token = req.cookies.get("token")?.value || null;
 
       if (!token) {
         return NextResponse.json(

@@ -19,7 +19,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ status: "error", message: "No file uploaded" }, { status: 400 });
     }
 
-    const fileName = `${randomUUID()}-${file.name}`;
+    const fileName = `${randomUUID()}-${(file as File).name}`;
     const fileBuffer = Buffer.from(await file.arrayBuffer());
 
     // 🔹 上傳到 S3

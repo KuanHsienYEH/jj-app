@@ -1,29 +1,25 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import JobDetailWrapper from "../../components/JobDetailWrapper";
 import { Job } from "@/types/jobs";
+import { notFound } from "next/navigation";
 
-interface JobDetailPageProps {
-  params: { id: string };
-}
-
-export default async function JobDetailPage({ params }: JobDetailPageProps) {
+export default async function Page(props: any) {
+  const { params, searchParams } = props;
   const { id } = params;
 
-  // Fetch job data on the server
-  const baseUrl =  typeof window !== "undefined" ? window.location.origin : "";
-  const res = await fetch(`${baseUrl}/api/jobs/get-jobs?id=${id}`, {
-    cache: "no-store", // Ensure fresh data for dynamic routes
+  // 取得最新 job 資料
+  const res = await fetch(`/api/jobs/get-jobs?id=${id}`, {
+    cache: "no-store", // 確保每次請求取得最新資料
   });
   const data = await res.json();
 
-  // Handle case where job is not found
   const job: Job | null =
     data.status === "success" && data.data.jobs && data.data.jobs.length > 0
       ? data.data.jobs[0]
       : null;
 
   if (!job) {
-    return <Typography variant="h6">Job not found</Typography>;
+    notFound(); // job 不存在則導向 404 頁面
   }
 
   return (
