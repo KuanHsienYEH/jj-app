@@ -126,7 +126,7 @@ export default function LatestJob() {
           最新職缺
         </Typography>
         <Link
-          href="/jobs"
+          href="/job"
           underline="hover"
           sx={{
             position: "absolute",

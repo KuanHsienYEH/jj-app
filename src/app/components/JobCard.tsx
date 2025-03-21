@@ -40,7 +40,7 @@ export default function JobCard({ job }: { job: Job }) {
         </CardActionArea>
       </Link>
       <CardActions>
-        <Button onClick={() => router.push(`/jobs/${job._id}`)} variant="outlined">
+        <Button onClick={() => router.push(`/job/${job._id}`)} variant="outlined">
           我要應徵
         </Button>
       </CardActions>
