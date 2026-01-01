@@ -1,19 +1,28 @@
 "use client";
 
+import { useState, useEffect,useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Container, Box, Button, Stack } from "@mui/material";
 import LatestJob from "./components/LatestJob";
 import Service from "./components/Service";
-
+import { Job } from '@/types/jobs';
+import { useJobs } from "./hooks/useJobs";
 
 // ✅ Import global SCSS
 
 export default function Homepage() {
+  
   const router = useRouter();
-
   const handleJobSeekers = () => {
     router.push("/job");
   };
+
+  // ✅ hook 一定要放在 component 最上層呼叫
+  const { jobs, loading } = useJobs();
+
+  // ✅ 只取前 9 筆
+  const latest9 = useMemo(() => jobs.slice(0, 9), [jobs]);
+
 
   const style={
     awardServiceBox:{
@@ -42,8 +51,7 @@ export default function Homepage() {
         {/* Services Section */}
         <Service />
 
-        {/* Latest Job Section */}
-        <LatestJob />
+     <LatestJob jobs={latest9} loading={loading} />
 
         
 

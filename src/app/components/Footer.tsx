@@ -11,6 +11,12 @@ interface FooterProps {
 
 export default function Footer({ year }: FooterProps) {
   const isMobile = useMediaQuery("(max-width:600px)");
+  const rowSx = {
+    display: "flex",
+    alignItems: "center",
+    gap: "8px",
+    "& svg": { width: 16, height: 16, flex: "0 0 16px", display: "inline-block" },
+  };
 
   return (
     <Box component="footer" sx={{ background: "#f8f9fa", py: 4, px: 2 }}>
@@ -26,7 +32,7 @@ export default function Footer({ year }: FooterProps) {
               巨將人力資源顧問有限公司
             </Typography>
             <Box mt={2}>
-              <Typography sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <Typography sx={rowSx}>
                 <FontAwesomeIcon icon={faLocationDot} />
                 <Link 
                   href="https://maps.app.goo.gl/XSiGu9tZtJGRhQV19" 
@@ -38,7 +44,7 @@ export default function Footer({ year }: FooterProps) {
                   106001 台北市大安區信義路二段
                 </Link>
               </Typography>
-              <Typography sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <Typography sx={rowSx}>
                 <FontAwesomeIcon icon={faPhone} />
                 <Link 
                   href="tel:0223569977" 
@@ -48,7 +54,7 @@ export default function Footer({ year }: FooterProps) {
                   (02) 2356-9977
                 </Link>
               </Typography>
-              <Typography sx={{ display: "flex", alignItems: "center", gap: "8px" }}>
+              <Typography sx={rowSx}>
                 <FontAwesomeIcon icon={faEnvelope} />
                 <Link 
                   href="mailto:service@jujianghr.com.tw" 
