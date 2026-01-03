@@ -20,7 +20,7 @@ export default function JobCard({ job }: { job: Job }) {
 
   return (
     <Card variant="outlined" className="slick-card">
-      <Link style={{textDecoration:"none"}} href={`/jobs/${job._id}`} passHref>
+      <Link style={{textDecoration:"none"}} href={`/job-search?jobId=${job._id}`} passHref>
         <CardActionArea>
           <CardContent>
             <Typography color="black" variant="h5" component="div">
@@ -40,7 +40,7 @@ export default function JobCard({ job }: { job: Job }) {
         </CardActionArea>
       </Link>
       <CardActions>
-        <Button onClick={() => router.push(`/job/${job._id}`)} variant="outlined">
+        <Button onClick={() => router.push(`/job-search?jobId=${job._id}`)} variant="outlined">
           我要應徵
         </Button>
       </CardActions>

@@ -39,7 +39,7 @@ export default function Footer({ year }: FooterProps) {
                   target="_blank" 
                   rel="noopener" 
                   color="inherit"
-                  style={{ textDecoration: "none", color: "#007bff" }}
+                  style={{ textDecoration: "none", color: "#1976d2" }}
                 >
                   106001 台北市大安區信義路二段
                 </Link>
@@ -49,7 +49,7 @@ export default function Footer({ year }: FooterProps) {
                 <Link 
                   href="tel:0223569977" 
                   color="inherit"
-                  style={{ textDecoration: "none", color: "#007bff" }}
+                  style={{ textDecoration: "none", color: "#1976d2" }}
                 >
                   (02) 2356-9977
                 </Link>
@@ -59,7 +59,7 @@ export default function Footer({ year }: FooterProps) {
                 <Link 
                   href="mailto:service@jujianghr.com.tw" 
                   color="inherit"
-                  style={{ textDecoration: "none", color: "#007bff" }}
+                  style={{ textDecoration: "none", color: "#1976d2" }}
                 >
                   service@jujianghr.com.tw
                 </Link>
@@ -82,14 +82,22 @@ export default function Footer({ year }: FooterProps) {
 
           {/* 快速連結 1 */}
           <Grid item md={2} sm={6} xs={12}>
+            <Typography variant="h6" >
+                公司介紹
+            </Typography>
             <Typography>
               <Link href="#" color="inherit" style={{ textDecoration: "none", color: "#333" }}>
-                公司介紹
+                服務指南
               </Link>
             </Typography>
             <Typography>
               <Link href="#" color="inherit" style={{ textDecoration: "none", color: "#333" }}>
-                服務內容
+                就業服務機構許可證
+              </Link>
+            </Typography>
+            <Typography>
+              <Link href="#" color="inherit" style={{ textDecoration: "none", color: "#333" }}>
+                歷年評鑑成績
               </Link>
             </Typography>
             <Typography>
@@ -97,17 +105,25 @@ export default function Footer({ year }: FooterProps) {
                 產業新聞
               </Link>
             </Typography>
+            <Typography>
+              <Link href="#" color="inherit" style={{ textDecoration: "none", color: "#333" }}>
+                收費項目金額明細表
+              </Link>
+            </Typography>
           </Grid>
 
           {/* 快速連結 2 */}
           <Grid item md={2} sm={6} xs={12}>
-            <Typography>
-              <Link href="#" color="inherit" style={{ textDecoration: "none", color: "#333" }}>
-                我要求職
-              </Link>
+            <Typography variant="h6" >
+                求職者資訊
             </Typography>
             <Typography>
               <Link href="#" color="inherit" style={{ textDecoration: "none", color: "#333" }}>
+                申訴處理機制
+              </Link>
+            </Typography>
+            <Typography>
+              <Link href="https://bola.gov.taipei/News_Content.aspx?n=9C30ECD2C9D31116&sms=B81E4E16FE8825B0&s=A520830439CE2567" color="inherit" style={{ textDecoration: "none", color: "#333" }}>
                 求職反詐騙
               </Link>
             </Typography>
@@ -120,9 +136,19 @@ export default function Footer({ year }: FooterProps) {
 
           {/* 聯絡按鈕 */}
           <Grid item md={2} sm={12} xs={12} textAlign={isMobile ? "center" : "left"}>
-            <Button variant="contained" size="large" sx={{ background: "#007bff", color: "white" }}>
-              聯絡我們
-            </Button>
+            <Typography variant="h6" >
+                法規資訊
+            </Typography>
+            <Typography>
+              <Link href="https://bola.gov.taipei/News_Content.aspx?n=9C30ECD2C9D31116&sms=B81E4E16FE8825B0&s=A520830439CE2567" color="inherit" style={{ textDecoration: "none", color: "#333" }}>
+                求職反詐騙
+              </Link>
+            </Typography>
+            <Typography>
+              <Link href="#" color="inherit" style={{ textDecoration: "none", color: "#333" }}>
+                性騷擾防治措施、申訴及懲戒辦法
+              </Link>
+            </Typography>
           </Grid>
         </Grid>
 

@@ -4,7 +4,7 @@ import React, { useMemo } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-
+import NextLink from "next/link";
 import JobCard from "./JobCard";
 import {
   Box,
@@ -14,6 +14,7 @@ import {
   Grid,
   Skeleton,
   Stack,
+  Button
 } from "@mui/material";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
@@ -23,6 +24,8 @@ type LatestJobProps = {
   jobs: Job[];
   loading?: boolean;
 };
+
+const actionWidth = 120;
 
 const NextArrow = (props: any) => {
   const { onClick } = props;
@@ -148,25 +151,53 @@ export default function LatestJob({ jobs, loading = false }: LatestJobProps) {
 
   return (
     <Container sx={{ mt: 10 }}>
-      <Box sx={{ position: "relative", textAlign: "center", mb: 3 }}>
-        <Typography variant="h4" fontWeight="bold">
-          最新職缺
-        </Typography>
-        <Link
-          href="/job"
-          underline="hover"
-          sx={{
-            position: "absolute",
-            right: 0,
-            top: "50%",
-            transform: "translateY(-50%)",
-            fontSize: 16,
-            color: "#007bff",
-          }}
-        >
-          更多職缺 &gt;
-        </Link>
-      </Box>
+    <Box
+  sx={{
+    display: "flex",
+    alignItems: "center",
+    mb: 3,
+    gap: 1,
+    flexDirection: { xs: "column", sm: "row" },
+  }}
+>
+  {/* 左側佔位：桌機用來平衡右側按鈕寬度；手機不需要 */}
+  <Box sx={{ width: { xs: 0, sm: actionWidth }, display: { xs: "none", sm: "block" } }} />
+
+  {/* 標題：永遠置中 */}
+  <Box sx={{ flex: 1, textAlign: "center" }}>
+    <Typography
+      variant="h4"
+      sx={{ fontWeight: 900, letterSpacing: -0.5, lineHeight: 1.2 }}
+    >
+      最新職缺
+    </Typography>
+  </Box>
+
+  {/* 右側動作 */}
+  <Box
+    sx={{
+      width: { xs: "auto", sm: actionWidth },
+      display: "flex",
+      justifyContent: { xs: "center", sm: "flex-end" },
+    }}
+  >
+    <Button
+      component={NextLink}
+      href="/job-search"
+      variant="text"
+      endIcon={<ArrowForwardIosIcon sx={{ fontSize: 16 }} />}
+      sx={{
+        fontWeight: 800,
+        textTransform: "none",
+        px: 0,
+        minWidth: "auto",
+      }}
+    >
+      更多職缺
+    </Button>
+  </Box>
+</Box>
+
 
       {jobs?.length ? (
         <div

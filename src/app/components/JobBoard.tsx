@@ -1,179 +1,175 @@
-// // app/jobs/components/JobBoard.tsx
-// 'use client';
+// components/job-board/JobBoard.tsx
+"use client";
 
-// import { useState, useEffect, useRef, useTransition } from 'react';
-// import { useSearchParams, useRouter } from 'next/navigation';
-// import { 
-//   Container, Paper, Box, TextField, Grid, 
-//   Typography, Stack, Skeleton, CircularProgress, IconButton, Alert 
-// } from '@mui/material';
-// import SearchIcon from '@mui/icons-material/Search';
-// import DeleteIcon from '@mui/icons-material/Delete';
-// import JobList from './JobList';
-// import JobDetail from './JobDetail';
-// import JobApplyModal from './JobModal';
-// import { Job } from '../types';
-// import { getJobs } from '../actions';
-// import { updateSearchParams } from '../utils';
+import * as React from "react";
+import { Box, Button, Paper, Stack, Typography } from "@mui/material";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
+import JobListPanel from "./JobListPanel";
+import JobDetailPanel from "./JobDetailPanel";
+import JobApplyModal from "./JobApplyModal";
+import { Job } from "@/types/jobs";
+import { useJobs } from "../hooks/useJobs";
 
-// interface JobBoardProps {
-//   initialJobs: Job[];
-//   keyword: string;
-//   hasMore: boolean;
-// }
+type Props = {
+  initialJobs: Job[];
+};
 
-// export function JobBoard({ initialJobs, keyword, hasMore }: JobBoardProps) {
-//   const [jobs, setJobs] = useState(initialJobs);
-//   const [currJob, setCurrJob] = useState<Job | null>(initialJobs[0] || null);
-//   const [searchTerm, setSearchTerm] = useState(keyword);
-//   const [isPending, startTransition] = useTransition();
-//   const [isLoadingMore, setIsLoadingMore] = useState(false);
-//   const [hasMoreJobs, setHasMoreJobs] = useState(hasMore);
-//   const [error, setError] = useState<string | null>(null);
-//   const [modalOpen, setModalOpen] = useState(false);
-//   const observerRef = useRef<HTMLDivElement>(null);
-//   const searchParams = useSearchParams();
-//   const router = useRouter();
-//   const offset = useRef(initialJobs.length);
+export default function JobBoard({ initialJobs }: Props) {
+  const router = useRouter();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
 
-//   const loadMoreJobs = async () => {
-//     if (isLoadingMore || !hasMoreJobs) return;
+  const jobIdFromUrl = searchParams.get("jobId") || "";
+  const { jobs: fetchedJobs, fetchJobs, loading, hasMore } = useJobs();
 
-//     setIsLoadingMore(true);
-//     setError(null);
-//     const response = await getJobs({
-//       keyword,
-//       offset: offset.current,
-//     });
+  const [jobs, setJobs] = React.useState<Job[]>(initialJobs);
+  const [page, setPage] = React.useState(2);
 
-//     if (response.status === 'error') {
-//       setError(response.message || 'Failed to load more jobs');
-//       setIsLoadingMore(false);
-//       return;
-//     }
+  const [openModal, setOpenModal] = React.useState(false);
+  const [selectedJobId, setSelectedJobId] = React.useState(jobIdFromUrl);
 
-//     setJobs((prev) => [...prev, ...response.jobs]);
-//     setHasMoreJobs(response.hasMore);
-//     offset.current += response.jobs.length;
-//     setIsLoadingMore(false);
-//   };
+  // Sync selected id from URL (supports refresh/back/forward)
+  React.useEffect(() => {
+    setSelectedJobId(jobIdFromUrl);
+  }, [jobIdFromUrl]);
 
-//   useEffect(() => {
-//     const observer = new IntersectionObserver(
-//       (entries) => {
-//         if (entries[0].isIntersecting && hasMoreJobs && !isLoadingMore) {
-//           loadMoreJobs();
-//         }
-//       },
-//       { threshold: 0.1 }
-//     );
+  // Merge fetched jobs into list (dedupe by _id)
+  React.useEffect(() => {
+    if (fetchedJobs?.length) {
+      setJobs((prev) => {
+        const newOnes = fetchedJobs.filter((j) => !prev.some((p) => p._id === j._id));
+        return [...prev, ...newOnes];
+      });
+    }
+  }, [fetchedJobs]);
 
-//     const currentObserverRef = observerRef.current;
-//     if (currentObserverRef) {
-//       observer.observe(currentObserverRef);
-//     }
+  const selectedJob = React.useMemo(() => {
+    if (!selectedJobId) return null;
+    return jobs.find((j) => j._id === selectedJobId) ?? null;
+  }, [jobs, selectedJobId]);
 
-//     return () => {
-//       if (currentObserverRef) {
-//         observer.unobserve(currentObserverRef);
-//       }
-//     };
-//   }, [hasMoreJobs, isLoadingMore]);
+  // Default select first job if URL has none
+  React.useEffect(() => {
+    if (!selectedJobId && jobs.length > 0) {
+      const firstId = jobs[0]._id;
+      const next = new URLSearchParams(searchParams.toString());
+      next.set("jobId", firstId);
+      router.replace(`${pathname}?${next.toString()}`, { scroll: false });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [jobs.length]);
 
-//   const handleSearch = () => {
-//     const filteredString = searchTerm.replace(/[^\u4e00-\u9fa5a-zA-Z0-9\s]/g, '');
-//     if (filteredString !== keyword) {
-//       startTransition(() => {
-//         router.push(updateSearchParams({ keyword: filteredString }));
-//         setJobs([]);
-//         setError(null);
-//         offset.current = 0;
-//         setHasMoreJobs(true);
-//       });
-//     }
-//   };
+  const handleSelect = (id: string) => {
+    const next = new URLSearchParams(searchParams.toString());
+    next.set("jobId", id);
+    router.push(`${pathname}?${next.toString()}`, { scroll: false });
+  };
 
-//   const clearSearch = () => {
-//     setSearchTerm('');
-//     startTransition(() => {
-//       router.push(updateSearchParams({ keyword: '' }));
-//       setJobs([]);
-//       setError(null);
-//       offset.current = 0;
-//       setHasMoreJobs(true);
-//     });
-//   };
+  const handleFetchMore = async () => {
+    await fetchJobs(page); //  hook 裡要吃 page
+    setPage((p) => p + 1);
+  };
 
-//   return (
-//     <Container>
-//       <Box className="search">
-//         <Paper
-//           component="form"
-//           elevation={0}
-//           onSubmit={(e) => {
-//             e.preventDefault();
-//             handleSearch();
-//           }}
-//         >
-//           <Box className="search-box">
-//             <TextField
-//               sx={{ mb: 1, ml: 1, flex: 1 }}
-//               label="搜尋職缺"
-//               variant="standard"
-//               value={searchTerm}
-//               onChange={(e) => setSearchTerm(e.target.value.trim())}
-//             />
-//             <IconButton type="submit" disabled={isPending}>
-//               {isPending ? <CircularProgress size={24} /> : <SearchIcon />}
-//             </IconButton>
-//           </Box>
-//         </Paper>
-//       </Box>
+  const handleApply = () => setOpenModal(true);
+  const PANEL_H = { xs: "70vh", md: "76vh" };
+  const hideScrollbarSx = {
+    overflowY: "auto",
+    scrollbarWidth: "none",      // Firefox
+    msOverflowStyle: "none",     // IE/Edge legacy
+    "&::-webkit-scrollbar": {
+        display: "none",           // Chrome/Safari
+    },
+  } as const;
 
-//       <Grid container mt={6} spacing={2}>
-//         <Grid item md={4} sm={4}>
-//           {keyword && (
-//             <Stack direction="row" alignItems="center">
-//               <Typography variant="h6" color="text.secondary">
-//                 搜尋關鍵字: {keyword}
-//               </Typography>
-//               <IconButton onClick={clearSearch}>
-//                 <DeleteIcon />
-//               </IconButton>
-//             </Stack>
-//           )}
-//           {isPending ? (
-//             <>
-//               <Skeleton variant="rectangular" height={100} />
-//               <Skeleton variant="rectangular" height={100} />
-//               <Skeleton variant="rectangular" height={100} />
-//             </>
-//           ) : (
-//             <>
-//               {error && <Alert severity="error" sx={{ mb: 2 }}>{error}</Alert>}
-//               <JobList
-//                 jobs={jobs}
-//                 curId={currJob?._id}
-//                 emitJob={setCurrJob}
-//               />
-//               {isLoadingMore && <CircularProgress sx={{ display: 'block', mx: 'auto', mt: 2 }} />}
-//               <div ref={observerRef} style={{ height: '20px' }} />
-//             </>
-//           )}
-//         </Grid>
-//         <Grid item md={8} sm={8}>
-//           {isPending ? (
-//             <Skeleton variant="rectangular" height={800} />
-//           ) : currJob ? (
-//             <JobDetail currJob={currJob} toggleModal={() => setModalOpen(!modalOpen)} />
-//           ) : null}
-//         </Grid>
-//       </Grid>
-//       <JobApplyModal
-//         job={currJob}
-//         modalOpen={modalOpen}
-//         toggleModal={() => setModalOpen(!modalOpen)}
-//       />
-//     </Container>
-//   );
-// }
+
+  return (
+    <Box
+      sx={{
+        maxWidth: 1200,
+        mx: "auto",
+        px: { xs: 2, md: 3 },
+        py: { xs: 2, md: 4 },
+      }}
+    >
+      {/* <Stack spacing={2} sx={{ mb: 2 }}>
+        <Typography variant="h4" sx={{ fontWeight: 800, letterSpacing: -0.5 }}>
+          Job List
+        </Typography>
+        <Typography variant="body1" color="text.secondary">
+          Click a job on the left to see details on the right.
+        </Typography>
+      </Stack> */}
+
+      <Box
+        sx={{
+          display: "grid",
+          gridTemplateColumns: { xs: "1fr", md: "420px 1fr" },
+          gap: 2,
+          alignItems: "start",
+        }}
+      >
+        {/* Left: List */}
+        <Box
+            sx={{
+            height: PANEL_H,
+            display: "flex",
+            flexDirection: "column",
+            bgcolor: "transparent",
+            }}
+        >
+            {/* optional: 你要保留標題就放這裡（不滑動） */}
+            <Box sx={{ height: PANEL_H, display: "flex", flexDirection: "column" }}>
+
+                <Box sx={{ px: 0, pb: 1 }}>
+                <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                    {jobs.length} 個職缺
+                </Typography>
+                </Box>
+
+                <Box
+                    sx={{
+                        flex: 1,
+                        overflowY: "auto",
+                        pr: 1,
+                    }}
+                >
+                <Box sx={{ flex: 1, ...hideScrollbarSx }}>
+                    <JobListPanel jobs={jobs} selectedId={selectedJobId} onSelect={handleSelect} />
+                    {/* load more... */}
+                </Box>
+            </Box>
+            <Box sx={{ mt: 2, display: "flex", justifyContent: "center", pb: 2 }}>
+              {hasMore ? (
+                <Button variant="outlined" onClick={handleFetchMore} disabled={loading}>
+                  {loading ? "Loading..." : "Read more"}
+                </Button>
+              ) : (
+                <Box sx={{ textAlign: "center", py: 2 }}>
+                  <Typography variant="body2" color="text.secondary">
+                    若目前沒有符合您專長的職位，歡迎主動與我們聯絡，有適合職缺我們將第一時間通知你。                  
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          </Box>
+        </Box>
+        <Box
+            sx={{
+            height: PANEL_H,
+            overflowY: "auto",
+            pr: 1,
+            bgcolor: "transparent",
+            }}
+        >
+            <JobDetailPanel job={selectedJob} onApply={handleApply} />
+        </Box>
+      </Box>
+
+      <JobApplyModal
+        modalOpen={openModal}
+        toggleModal={() => setOpenModal(false)}
+        jobTitle={selectedJob?.jobTitle ?? "Job Alert / Apply"}
+      />
+    </Box>
+  );
+}

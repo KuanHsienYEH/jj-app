@@ -41,9 +41,8 @@ interface NavItem {
 const drawerWidth = 240;
 
 const navItems: NavItem[] = [
-  { label: "Home", path: "/" },
   {
-    label: "About",
+    label: "關於巨將",
     path: "/about",
     subItems: [
       { label: "公司介紹", path: "/about/company-profile" },
@@ -51,7 +50,7 @@ const navItems: NavItem[] = [
       { label: "歷年評鑑成績", path: "/about/evaluation-results" },
     ],
   },
-  { label: "Contact", path: "/contact" },
+  { label: "聯絡我們", path: "/contact" },
 ];
 
 function HideOnScroll({ children }: HideOnScrollProps) {
