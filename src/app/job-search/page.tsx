@@ -1,5 +1,5 @@
 // app/job-list/page.tsx
-import JobBoard from "../components/JobBoard";
+import JobBoard from "../components/job-search/JobBoard";
 import { Job } from "@/types/jobs";
 import { headers } from "next/headers";
 

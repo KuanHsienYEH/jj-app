@@ -1,5 +1,5 @@
 import { Box } from "@mui/material";
-import JobDetailWrapper from "@/app/components/job-search/JobDetailWrapper";
+import JobDetailWrapper from "../../components/job-search/JobDetailWrapper";
 import { Job } from "@/types/jobs";
 import { notFound } from "next/navigation";
 

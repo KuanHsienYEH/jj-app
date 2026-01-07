@@ -3,12 +3,10 @@
 import { useState, useEffect,useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Container, Box, Button, Stack } from "@mui/material";
-import LatestJob from "./components/LatestJob";
-import Service from "./components/Service";
-import { Job } from '@/types/jobs';
+import LatestJob from "@/app/components/homepage/LatestJob";
+import Service from "@/app/components/homepage/Service";
 import { useJobs } from "./hooks/useJobs";
 
-// ✅ Import global SCSS
 
 export default function Homepage() {
   
@@ -51,7 +49,7 @@ export default function Homepage() {
         {/* Services Section */}
         <Service />
 
-     <LatestJob jobs={latest9} loading={loading} />
+        <LatestJob jobs={latest9} loading={loading} />
 
         
 

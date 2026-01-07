@@ -5,7 +5,6 @@ import Link from "next/link";
 import { Card, CardActions, CardContent, CardActionArea, Button, Typography, Box } from "@mui/material";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faLocationDot, faDollarSign } from "@fortawesome/free-solid-svg-icons";
-import styles from "@/styles/components/jobcard.module.scss"; // ✅ 使用 SCSS Modules
 
 
 type Job = {
@@ -20,7 +19,7 @@ export default function JobCard({ job }: { job: Job }) {
 
   return (
     <Card variant="outlined" className="slick-card">
-      <Link style={{textDecoration:"none"}} href={`/job-search?jobId=${job._id}`} passHref>
+      <Link style={{ textDecoration: "none" }} href={`/job-search?jobId=${job._id}`} passHref>
         <CardActionArea>
           <CardContent>
             <Typography color="black" variant="h5" component="div">

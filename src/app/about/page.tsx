@@ -1,3 +1,5 @@
-export default function AboutPage() {
-  return <>about</>;
+import ServicesPage from "../components/about/ServicesPage";
+
+export default function About() {
+  return <ServicesPage />;
 }

@@ -8,7 +8,7 @@ import JobListPanel from "./JobListPanel";
 import JobDetailPanel from "./JobDetailPanel";
 import JobApplyModal from "./JobApplyModal";
 import { Job } from "@/types/jobs";
-import { useJobs } from "../hooks/useJobs";
+import { useJobs } from "../../hooks/useJobs";
 
 type Props = {
   initialJobs: Job[];

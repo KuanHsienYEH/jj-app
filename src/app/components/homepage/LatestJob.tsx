@@ -151,52 +151,52 @@ export default function LatestJob({ jobs, loading = false }: LatestJobProps) {
 
   return (
     <Container sx={{ mt: 10 }}>
-    <Box
-  sx={{
-    display: "flex",
-    alignItems: "center",
-    mb: 3,
-    gap: 1,
-    flexDirection: { xs: "column", sm: "row" },
-  }}
->
-  {/* 左側佔位：桌機用來平衡右側按鈕寬度；手機不需要 */}
-  <Box sx={{ width: { xs: 0, sm: actionWidth }, display: { xs: "none", sm: "block" } }} />
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          mb: 3,
+          gap: 1,
+          flexDirection: { xs: "column", sm: "row" },
+        }}
+      >
+        {/* 左側佔位：桌機用來平衡右側按鈕寬度；手機不需要 */}
+        <Box sx={{ width: { xs: 0, sm: actionWidth }, display: { xs: "none", sm: "block" } }} />
 
-  {/* 標題：永遠置中 */}
-  <Box sx={{ flex: 1, textAlign: "center" }}>
-    <Typography
-      variant="h4"
-      sx={{ fontWeight: 900, letterSpacing: -0.5, lineHeight: 1.2 }}
-    >
-      最新職缺
-    </Typography>
-  </Box>
+        {/* 標題：永遠置中 */}
+        <Box sx={{ flex: 1, textAlign: "center" }}>
+          <Typography
+            variant="h4"
+            sx={{ fontWeight: 900, letterSpacing: -0.5, lineHeight: 1.2 }}
+          >
+            最新職缺
+          </Typography>
+        </Box>
 
-  {/* 右側動作 */}
-  <Box
-    sx={{
-      width: { xs: "auto", sm: actionWidth },
-      display: "flex",
-      justifyContent: { xs: "center", sm: "flex-end" },
-    }}
-  >
-    <Button
-      component={NextLink}
-      href="/job-search"
-      variant="text"
-      endIcon={<ArrowForwardIosIcon sx={{ fontSize: 16 }} />}
-      sx={{
-        fontWeight: 800,
-        textTransform: "none",
-        px: 0,
-        minWidth: "auto",
-      }}
-    >
-      更多職缺
-    </Button>
-  </Box>
-</Box>
+        {/* 右側動作 */}
+        <Box
+          sx={{
+            width: { xs: "auto", sm: actionWidth },
+            display: "flex",
+            justifyContent: { xs: "center", sm: "flex-end" },
+          }}
+        >
+          <Button
+            component={NextLink}
+            href="/job-search"
+            variant="text"
+            endIcon={<ArrowForwardIosIcon sx={{ fontSize: 16 }} />}
+            sx={{
+              fontWeight: 800,
+              textTransform: "none",
+              px: 0,
+              minWidth: "auto",
+            }}
+          >
+            更多職缺
+          </Button>
+        </Box>
+      </Box>
 
 
       {jobs?.length ? (

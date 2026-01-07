@@ -24,7 +24,7 @@ import ClearIcon from "@mui/icons-material/Clear";
 import { styled } from "@mui/material/styles";
 import * as yup from "yup";
 import { Job } from "@/types/jobs";
-import CustomSnackbar from "./CustomSnackbar";
+import CustomSnackbar from "../CustomSnackbar";
 
 // Define modal style
 const style = {

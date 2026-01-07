@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import JobDetail from "./JobDetail";
-import JobModal from "./JobModal";
+import JobModal from "./JobApplyModal";
 import { Job } from "@/types/jobs";
 
 interface JobDetailWrapperProps {
