@@ -4,6 +4,7 @@ import { useState, useRef, useEffect, useMemo, useCallback } from "react";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import { useRouter } from 'next/navigation';
 import { Box, Button, Stack, Container, Typography } from "@mui/material";
 import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import ArrowBackIosIcon from "@mui/icons-material/ArrowBackIos";
@@ -21,6 +22,7 @@ export default function Service() {
   const {services} = useService();
   const serviceData = services;
   const totalSlides = services.length;
+  const router = useRouter();
 
   const [timeLeft, setTimeLeft] = useState(DURATION);
   const [currentSlide, setCurrentSlide] = useState(0);
@@ -50,6 +52,10 @@ export default function Service() {
     lastManualRef.current = Date.now();
     slick.current?.slickNext?.();
   }, []);
+
+  const goAbout = ()=>{
+    router.push('/about');
+  }
 
 
   useEffect(() => {
@@ -135,6 +141,7 @@ export default function Service() {
             py: 1.8,
             display: { xs: "none", md: "inline-flex" },
           }}
+          onClick={goAbout}
         >
           <Typography fontWeight="bold" className={styles.serviceGuideText}>
             服務指南

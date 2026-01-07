@@ -101,7 +101,7 @@ export default function Footer({ year }: FooterProps) {
               </Link>
             </Typography>
             <Typography>
-              <Link href="#" color="inherit" style={{ textDecoration: "none", color: "#333" }}>
+              <Link href="#" color="inherit" target="_blink" style={{ textDecoration: "none", color: "#333" }}>
                 產業新聞
               </Link>
             </Typography>
@@ -123,7 +123,7 @@ export default function Footer({ year }: FooterProps) {
               </Link>
             </Typography>
             <Typography>
-              <Link href="https://bola.gov.taipei/News_Content.aspx?n=9C30ECD2C9D31116&sms=B81E4E16FE8825B0&s=A520830439CE2567" color="inherit" style={{ textDecoration: "none", color: "#333" }}>
+              <Link target="_blank" href="https://bola.gov.taipei/News_Content.aspx?n=9C30ECD2C9D31116&sms=B81E4E16FE8825B0&s=A520830439CE2567" color="inherit" style={{ textDecoration: "none", color: "#333" }}>
                 求職反詐騙
               </Link>
             </Typography>
@@ -140,7 +140,7 @@ export default function Footer({ year }: FooterProps) {
                 法規資訊
             </Typography>
             <Typography>
-              <Link href="https://bola.gov.taipei/News_Content.aspx?n=9C30ECD2C9D31116&sms=B81E4E16FE8825B0&s=A520830439CE2567" color="inherit" style={{ textDecoration: "none", color: "#333" }}>
+              <Link target="_blank" href="https://bola.gov.taipei/News_Content.aspx?n=9C30ECD2C9D31116&sms=B81E4E16FE8825B0&s=A520830439CE2567" color="inherit" style={{ textDecoration: "none", color: "#333" }}>
                 求職反詐騙
               </Link>
             </Typography>

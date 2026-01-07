@@ -14,6 +14,9 @@ export default function Homepage() {
   const handleJobSeekers = () => {
     router.push("/job");
   };
+  const goContact = () => {
+    router.push("/contact");
+  };
 
   // ✅ hook 一定要放在 component 最上層呼叫
   const { jobs, loading } = useJobs();
@@ -39,7 +42,7 @@ export default function Homepage() {
             <h1>關鍵人才 盡在巨將</h1>
             <p>企業掌握關鍵人才的最佳合作夥伴</p>
             <Stack spacing={2} direction="row">
-              <Button variant="contained">企業求才</Button>
+              <Button onClick={()=>goContact()} variant="contained">企業求才</Button>
               <Button onClick={()=>handleJobSeekers()} variant="outlined">我要求職</Button>
             </Stack>
             </div>

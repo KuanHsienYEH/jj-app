@@ -45,6 +45,7 @@ const navItems: NavItem[] = [
     label: "關於巨將",
     path: "/about",
     subItems: [
+      { label: "服務項目", path: "/about" },
       { label: "許可證", path: "/about/license" },
       { label: "歷年評鑑成績", path: "/about/evaluation-results" },
     ],
