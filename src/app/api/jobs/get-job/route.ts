@@ -1,28 +1,15 @@
 import { NextResponse } from "next/server";
-import { withDB, withMethod } from "../../../../lib/middleware";
-import { getJobs } from "../../../../controllers/jobsController";
-import { ApiResponse } from "../../../../types/api";
+import { withDB, withMethod } from "@/lib/middleware";
+import { getJob } from "@/controllers/jobsController";
+import { ApiResponse } from "@/types/api";
 import { NextRequest } from "next/server";
 
 export const GET = withDB(withMethod(["GET"], async (req: NextRequest) => {
   try {
     const url = new URL(req.url);
-    const page = parseInt(url.searchParams.get("page") || "1", 10);
-    const limit = parseInt(url.searchParams.get("limit") || "10", 10);
-    const keyword = url.searchParams.get("keyword") || "";
+     const id = url.searchParams.get("id") || "";
 
-    console.log(`Fetching jobs - Page: ${page}, Limit: ${limit}, Keyword: ${keyword}`);
-
-    // 確保 page 和 limit 合法
-    if (page < 1 || limit < 1) {
-      return NextResponse.json(
-        { status: "error", message: "Invalid pagination parameters" },
-        { status: 400 }
-      );
-    }
-
-    // 呼叫 getJobs 並傳入 page、limit 和 keyword
-    const response: ApiResponse = await getJobs(page, limit, keyword);
+    const response: ApiResponse = await getJob(id);
 
     // 確保 response 格式正確
     if (!response || response.status !== "success" || !response.data) {
