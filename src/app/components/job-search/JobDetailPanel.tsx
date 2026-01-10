@@ -57,13 +57,12 @@ export default function JobDetailPanel({ job, onApply }: Props) {
   }
 
   
-  
 
   const openShare = (url: string) => {
     window.open(url, "_blank", "noopener,noreferrer");
   };
 
-  const shareUrl = `${window.location.origin}/job-search/${job._id}`
+  const shareUrl = `${pageUrl}/job-search/${job._id}`
 
   const fbShareUrl = shareUrl
     ? `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}`
